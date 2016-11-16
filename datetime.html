@@ -1,0 +1,452 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: built-in module datetime</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>datetime</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br>(built-in)</font></td></tr></table>
+    <p><tt>Fast&nbsp;implementation&nbsp;of&nbsp;the&nbsp;<a href="#datetime">datetime</a>&nbsp;type.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="datetime.html#date">date</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="datetime.html#datetime">datetime</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="datetime.html#time">time</a>
+</font></dt><dt><font face="helvetica, arial"><a href="datetime.html#timedelta">timedelta</a>
+</font></dt><dt><font face="helvetica, arial"><a href="datetime.html#tzinfo">tzinfo</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="date">class <strong>date</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#date">date</a>(year,&nbsp;month,&nbsp;day)&nbsp;--&gt;&nbsp;<a href="#date">date</a>&nbsp;<a href="__builtin__.html#object">object</a><br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="date-__add__"><strong>__add__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="date-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="date-__format__"><strong>__format__</strong></a>(...)</dt><dd><tt>Formats&nbsp;self&nbsp;with&nbsp;strftime.</tt></dd></dl>
+
+<dl><dt><a name="date-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="date-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="date-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="date-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="date-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="date-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="date-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="date-__radd__"><strong>__radd__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__radd__">__radd__</a>(y)&nbsp;&lt;==&gt;&nbsp;y+x</tt></dd></dl>
+
+<dl><dt><a name="date-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt><a href="#date-__reduce__">__reduce__</a>()&nbsp;-&gt;&nbsp;(cls,&nbsp;state)</tt></dd></dl>
+
+<dl><dt><a name="date-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="date-__rsub__"><strong>__rsub__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__rsub__">__rsub__</a>(y)&nbsp;&lt;==&gt;&nbsp;y-x</tt></dd></dl>
+
+<dl><dt><a name="date-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="date-__sub__"><strong>__sub__</strong></a>(...)</dt><dd><tt>x.<a href="#date-__sub__">__sub__</a>(y)&nbsp;&lt;==&gt;&nbsp;x-y</tt></dd></dl>
+
+<dl><dt><a name="date-ctime"><strong>ctime</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#date-ctime">ctime</a>()&nbsp;style&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="date-fromordinal"><strong>fromordinal</strong></a>(...)</dt><dd><tt>int&nbsp;-&gt;&nbsp;<a href="#date">date</a>&nbsp;corresponding&nbsp;to&nbsp;a&nbsp;proleptic&nbsp;Gregorian&nbsp;ordinal.</tt></dd></dl>
+
+<dl><dt><a name="date-fromtimestamp"><strong>fromtimestamp</strong></a>(...)</dt><dd><tt>timestamp&nbsp;-&gt;&nbsp;local&nbsp;<a href="#date">date</a>&nbsp;from&nbsp;a&nbsp;POSIX&nbsp;timestamp&nbsp;(like&nbsp;<a href="#time">time</a>.<a href="#time">time</a>()).</tt></dd></dl>
+
+<dl><dt><a name="date-isocalendar"><strong>isocalendar</strong></a>(...)</dt><dd><tt>Return&nbsp;a&nbsp;3-tuple&nbsp;containing&nbsp;ISO&nbsp;year,&nbsp;week&nbsp;number,&nbsp;and&nbsp;weekday.</tt></dd></dl>
+
+<dl><dt><a name="date-isoformat"><strong>isoformat</strong></a>(...)</dt><dd><tt>Return&nbsp;string&nbsp;in&nbsp;ISO&nbsp;8601&nbsp;format,&nbsp;YYYY-MM-DD.</tt></dd></dl>
+
+<dl><dt><a name="date-isoweekday"><strong>isoweekday</strong></a>(...)</dt><dd><tt>Return&nbsp;the&nbsp;day&nbsp;of&nbsp;the&nbsp;week&nbsp;represented&nbsp;by&nbsp;the&nbsp;<a href="#date">date</a>.<br>
+Monday&nbsp;==&nbsp;1&nbsp;...&nbsp;Sunday&nbsp;==&nbsp;7</tt></dd></dl>
+
+<dl><dt><a name="date-replace"><strong>replace</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#date">date</a>&nbsp;with&nbsp;new&nbsp;specified&nbsp;fields.</tt></dd></dl>
+
+<dl><dt><a name="date-strftime"><strong>strftime</strong></a>(...)</dt><dd><tt>format&nbsp;-&gt;&nbsp;<a href="#date-strftime">strftime</a>()&nbsp;style&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="date-timetuple"><strong>timetuple</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#time">time</a>&nbsp;tuple,&nbsp;compatible&nbsp;with&nbsp;<a href="#time">time</a>.localtime().</tt></dd></dl>
+
+<dl><dt><a name="date-today"><strong>today</strong></a>(...)</dt><dd><tt>Current&nbsp;<a href="#date">date</a>&nbsp;or&nbsp;<a href="#datetime">datetime</a>:&nbsp;&nbsp;same&nbsp;as&nbsp;self.<strong>__class__</strong>.<a href="#date-fromtimestamp">fromtimestamp</a>(<a href="#time">time</a>.<a href="#time">time</a>()).</tt></dd></dl>
+
+<dl><dt><a name="date-toordinal"><strong>toordinal</strong></a>(...)</dt><dd><tt>Return&nbsp;proleptic&nbsp;Gregorian&nbsp;ordinal.&nbsp;&nbsp;January&nbsp;1&nbsp;of&nbsp;year&nbsp;1&nbsp;is&nbsp;day&nbsp;1.</tt></dd></dl>
+
+<dl><dt><a name="date-weekday"><strong>weekday</strong></a>(...)</dt><dd><tt>Return&nbsp;the&nbsp;day&nbsp;of&nbsp;the&nbsp;week&nbsp;represented&nbsp;by&nbsp;the&nbsp;<a href="#date">date</a>.<br>
+Monday&nbsp;==&nbsp;0&nbsp;...&nbsp;Sunday&nbsp;==&nbsp;6</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>day</strong></dt>
+</dl>
+<dl><dt><strong>month</strong></dt>
+</dl>
+<dl><dt><strong>year</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#date-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>max</strong> = datetime.date(9999, 12, 31)</dl>
+
+<dl><dt><strong>min</strong> = datetime.date(1, 1, 1)</dl>
+
+<dl><dt><strong>resolution</strong> = datetime.timedelta(1)</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="datetime">class <strong>datetime</strong></a>(<a href="datetime.html#date">date</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#datetime">datetime</a>(year,&nbsp;month,&nbsp;day[,&nbsp;hour[,&nbsp;minute[,&nbsp;second[,&nbsp;microsecond[,<a href="#tzinfo">tzinfo</a>]]]]])<br>
+&nbsp;<br>
+The&nbsp;year,&nbsp;month&nbsp;and&nbsp;day&nbsp;arguments&nbsp;are&nbsp;required.&nbsp;<a href="#tzinfo">tzinfo</a>&nbsp;may&nbsp;be&nbsp;None,&nbsp;or&nbsp;an<br>
+instance&nbsp;of&nbsp;a&nbsp;<a href="#tzinfo">tzinfo</a>&nbsp;subclass.&nbsp;The&nbsp;remaining&nbsp;arguments&nbsp;may&nbsp;be&nbsp;ints&nbsp;or&nbsp;longs.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="datetime.html#datetime">datetime</a></dd>
+<dd><a href="datetime.html#date">date</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="datetime-__add__"><strong>__add__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="datetime-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="datetime-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="datetime-__radd__"><strong>__radd__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__radd__">__radd__</a>(y)&nbsp;&lt;==&gt;&nbsp;y+x</tt></dd></dl>
+
+<dl><dt><a name="datetime-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt><a href="#datetime-__reduce__">__reduce__</a>()&nbsp;-&gt;&nbsp;(cls,&nbsp;state)</tt></dd></dl>
+
+<dl><dt><a name="datetime-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="datetime-__rsub__"><strong>__rsub__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__rsub__">__rsub__</a>(y)&nbsp;&lt;==&gt;&nbsp;y-x</tt></dd></dl>
+
+<dl><dt><a name="datetime-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="datetime-__sub__"><strong>__sub__</strong></a>(...)</dt><dd><tt>x.<a href="#datetime-__sub__">__sub__</a>(y)&nbsp;&lt;==&gt;&nbsp;x-y</tt></dd></dl>
+
+<dl><dt><a name="datetime-astimezone"><strong>astimezone</strong></a>(...)</dt><dd><tt>tz&nbsp;-&gt;&nbsp;convert&nbsp;to&nbsp;local&nbsp;<a href="#time">time</a>&nbsp;in&nbsp;new&nbsp;timezone&nbsp;tz</tt></dd></dl>
+
+<dl><dt><a name="datetime-combine"><strong>combine</strong></a>(...)</dt><dd><tt><a href="#date">date</a>,&nbsp;<a href="#time">time</a>&nbsp;-&gt;&nbsp;<a href="#datetime">datetime</a>&nbsp;with&nbsp;same&nbsp;<a href="#date">date</a>&nbsp;and&nbsp;<a href="#time">time</a>&nbsp;fields</tt></dd></dl>
+
+<dl><dt><a name="datetime-ctime"><strong>ctime</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#datetime-ctime">ctime</a>()&nbsp;style&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="datetime-date"><strong>date</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#date">date</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;same&nbsp;year,&nbsp;month&nbsp;and&nbsp;day.</tt></dd></dl>
+
+<dl><dt><a name="datetime-dst"><strong>dst</strong></a>(...)</dt><dd><tt>Return&nbsp;self.<strong>tzinfo</strong>.<a href="#datetime-dst">dst</a>(self).</tt></dd></dl>
+
+<dl><dt><a name="datetime-fromtimestamp"><strong>fromtimestamp</strong></a>(...)</dt><dd><tt>timestamp[,&nbsp;tz]&nbsp;-&gt;&nbsp;tz's&nbsp;local&nbsp;<a href="#time">time</a>&nbsp;from&nbsp;POSIX&nbsp;timestamp.</tt></dd></dl>
+
+<dl><dt><a name="datetime-isoformat"><strong>isoformat</strong></a>(...)</dt><dd><tt>[sep]&nbsp;-&gt;&nbsp;string&nbsp;in&nbsp;ISO&nbsp;8601&nbsp;format,&nbsp;YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM].<br>
+&nbsp;<br>
+sep&nbsp;is&nbsp;used&nbsp;to&nbsp;separate&nbsp;the&nbsp;year&nbsp;from&nbsp;the&nbsp;<a href="#time">time</a>,&nbsp;and&nbsp;defaults&nbsp;to&nbsp;'T'.</tt></dd></dl>
+
+<dl><dt><a name="datetime-now"><strong>now</strong></a>(...)</dt><dd><tt>[tz]&nbsp;-&gt;&nbsp;new&nbsp;<a href="#datetime">datetime</a>&nbsp;with&nbsp;tz's&nbsp;local&nbsp;day&nbsp;and&nbsp;<a href="#time">time</a>.</tt></dd></dl>
+
+<dl><dt><a name="datetime-replace"><strong>replace</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#datetime">datetime</a>&nbsp;with&nbsp;new&nbsp;specified&nbsp;fields.</tt></dd></dl>
+
+<dl><dt><a name="datetime-strptime"><strong>strptime</strong></a>(...)</dt><dd><tt>string,&nbsp;format&nbsp;-&gt;&nbsp;new&nbsp;<a href="#datetime">datetime</a>&nbsp;parsed&nbsp;from&nbsp;a&nbsp;string&nbsp;(like&nbsp;<a href="#time">time</a>.<a href="#datetime-strptime">strptime</a>()).</tt></dd></dl>
+
+<dl><dt><a name="datetime-time"><strong>time</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#time">time</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;same&nbsp;<a href="#time">time</a>&nbsp;but&nbsp;with&nbsp;<a href="#tzinfo">tzinfo</a>=None.</tt></dd></dl>
+
+<dl><dt><a name="datetime-timetuple"><strong>timetuple</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#time">time</a>&nbsp;tuple,&nbsp;compatible&nbsp;with&nbsp;<a href="#time">time</a>.localtime().</tt></dd></dl>
+
+<dl><dt><a name="datetime-timetz"><strong>timetz</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#time">time</a>&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;same&nbsp;<a href="#time">time</a>&nbsp;and&nbsp;<a href="#tzinfo">tzinfo</a>.</tt></dd></dl>
+
+<dl><dt><a name="datetime-tzname"><strong>tzname</strong></a>(...)</dt><dd><tt>Return&nbsp;self.<strong>tzinfo</strong>.<a href="#datetime-tzname">tzname</a>(self).</tt></dd></dl>
+
+<dl><dt><a name="datetime-utcfromtimestamp"><strong>utcfromtimestamp</strong></a>(...)</dt><dd><tt>timestamp&nbsp;-&gt;&nbsp;UTC&nbsp;<a href="#datetime">datetime</a>&nbsp;from&nbsp;a&nbsp;POSIX&nbsp;timestamp&nbsp;(like&nbsp;<a href="#time">time</a>.<a href="#datetime-time">time</a>()).</tt></dd></dl>
+
+<dl><dt><a name="datetime-utcnow"><strong>utcnow</strong></a>(...)</dt><dd><tt>Return&nbsp;a&nbsp;new&nbsp;<a href="#datetime">datetime</a>&nbsp;representing&nbsp;UTC&nbsp;day&nbsp;and&nbsp;<a href="#time">time</a>.</tt></dd></dl>
+
+<dl><dt><a name="datetime-utcoffset"><strong>utcoffset</strong></a>(...)</dt><dd><tt>Return&nbsp;self.<strong>tzinfo</strong>.<a href="#datetime-utcoffset">utcoffset</a>(self).</tt></dd></dl>
+
+<dl><dt><a name="datetime-utctimetuple"><strong>utctimetuple</strong></a>(...)</dt><dd><tt>Return&nbsp;UTC&nbsp;<a href="#time">time</a>&nbsp;tuple,&nbsp;compatible&nbsp;with&nbsp;<a href="#time">time</a>.localtime().</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>hour</strong></dt>
+</dl>
+<dl><dt><strong>microsecond</strong></dt>
+</dl>
+<dl><dt><strong>minute</strong></dt>
+</dl>
+<dl><dt><strong>second</strong></dt>
+</dl>
+<dl><dt><strong>tzinfo</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#datetime-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>max</strong> = datetime.datetime(9999, 12, 31, 23, 59, 59, 999999)</dl>
+
+<dl><dt><strong>min</strong> = datetime.datetime(1, 1, 1, 0, 0)</dl>
+
+<dl><dt><strong>resolution</strong> = datetime.timedelta(0, 0, 1)</dl>
+
+<hr>
+Methods inherited from <a href="datetime.html#date">date</a>:<br>
+<dl><dt><a name="datetime-__format__"><strong>__format__</strong></a>(...)</dt><dd><tt>Formats&nbsp;self&nbsp;with&nbsp;strftime.</tt></dd></dl>
+
+<dl><dt><a name="datetime-fromordinal"><strong>fromordinal</strong></a>(...)</dt><dd><tt>int&nbsp;-&gt;&nbsp;<a href="#date">date</a>&nbsp;corresponding&nbsp;to&nbsp;a&nbsp;proleptic&nbsp;Gregorian&nbsp;ordinal.</tt></dd></dl>
+
+<dl><dt><a name="datetime-isocalendar"><strong>isocalendar</strong></a>(...)</dt><dd><tt>Return&nbsp;a&nbsp;3-tuple&nbsp;containing&nbsp;ISO&nbsp;year,&nbsp;week&nbsp;number,&nbsp;and&nbsp;weekday.</tt></dd></dl>
+
+<dl><dt><a name="datetime-isoweekday"><strong>isoweekday</strong></a>(...)</dt><dd><tt>Return&nbsp;the&nbsp;day&nbsp;of&nbsp;the&nbsp;week&nbsp;represented&nbsp;by&nbsp;the&nbsp;<a href="#date">date</a>.<br>
+Monday&nbsp;==&nbsp;1&nbsp;...&nbsp;Sunday&nbsp;==&nbsp;7</tt></dd></dl>
+
+<dl><dt><a name="datetime-strftime"><strong>strftime</strong></a>(...)</dt><dd><tt>format&nbsp;-&gt;&nbsp;<a href="#datetime-strftime">strftime</a>()&nbsp;style&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="datetime-today"><strong>today</strong></a>(...)</dt><dd><tt>Current&nbsp;<a href="#date">date</a>&nbsp;or&nbsp;<a href="#datetime">datetime</a>:&nbsp;&nbsp;same&nbsp;as&nbsp;self.<strong>__class__</strong>.<a href="#datetime-fromtimestamp">fromtimestamp</a>(<a href="#time">time</a>.<a href="#datetime-time">time</a>()).</tt></dd></dl>
+
+<dl><dt><a name="datetime-toordinal"><strong>toordinal</strong></a>(...)</dt><dd><tt>Return&nbsp;proleptic&nbsp;Gregorian&nbsp;ordinal.&nbsp;&nbsp;January&nbsp;1&nbsp;of&nbsp;year&nbsp;1&nbsp;is&nbsp;day&nbsp;1.</tt></dd></dl>
+
+<dl><dt><a name="datetime-weekday"><strong>weekday</strong></a>(...)</dt><dd><tt>Return&nbsp;the&nbsp;day&nbsp;of&nbsp;the&nbsp;week&nbsp;represented&nbsp;by&nbsp;the&nbsp;<a href="#date">date</a>.<br>
+Monday&nbsp;==&nbsp;0&nbsp;...&nbsp;Sunday&nbsp;==&nbsp;6</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="datetime.html#date">date</a>:<br>
+<dl><dt><strong>day</strong></dt>
+</dl>
+<dl><dt><strong>month</strong></dt>
+</dl>
+<dl><dt><strong>year</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="time">class <strong>time</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#time">time</a>([hour[,&nbsp;minute[,&nbsp;second[,&nbsp;microsecond[,&nbsp;<a href="#tzinfo">tzinfo</a>]]]]])&nbsp;--&gt;&nbsp;a&nbsp;<a href="#time">time</a>&nbsp;<a href="__builtin__.html#object">object</a><br>
+&nbsp;<br>
+All&nbsp;arguments&nbsp;are&nbsp;optional.&nbsp;<a href="#tzinfo">tzinfo</a>&nbsp;may&nbsp;be&nbsp;None,&nbsp;or&nbsp;an&nbsp;instance&nbsp;of<br>
+a&nbsp;<a href="#tzinfo">tzinfo</a>&nbsp;subclass.&nbsp;The&nbsp;remaining&nbsp;arguments&nbsp;may&nbsp;be&nbsp;ints&nbsp;or&nbsp;longs.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="time-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="time-__format__"><strong>__format__</strong></a>(...)</dt><dd><tt>Formats&nbsp;self&nbsp;with&nbsp;strftime.</tt></dd></dl>
+
+<dl><dt><a name="time-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="time-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="time-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="time-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="time-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="time-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="time-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="time-__nonzero__"><strong>__nonzero__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__nonzero__">__nonzero__</a>()&nbsp;&lt;==&gt;&nbsp;x&nbsp;!=&nbsp;0</tt></dd></dl>
+
+<dl><dt><a name="time-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt><a href="#time-__reduce__">__reduce__</a>()&nbsp;-&gt;&nbsp;(cls,&nbsp;state)</tt></dd></dl>
+
+<dl><dt><a name="time-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="time-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#time-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="time-dst"><strong>dst</strong></a>(...)</dt><dd><tt>Return&nbsp;self.<strong>tzinfo</strong>.<a href="#time-dst">dst</a>(self).</tt></dd></dl>
+
+<dl><dt><a name="time-isoformat"><strong>isoformat</strong></a>(...)</dt><dd><tt>Return&nbsp;string&nbsp;in&nbsp;ISO&nbsp;8601&nbsp;format,&nbsp;HH:MM:SS[.mmmmmm][+HH:MM].</tt></dd></dl>
+
+<dl><dt><a name="time-replace"><strong>replace</strong></a>(...)</dt><dd><tt>Return&nbsp;<a href="#time">time</a>&nbsp;with&nbsp;new&nbsp;specified&nbsp;fields.</tt></dd></dl>
+
+<dl><dt><a name="time-strftime"><strong>strftime</strong></a>(...)</dt><dd><tt>format&nbsp;-&gt;&nbsp;<a href="#time-strftime">strftime</a>()&nbsp;style&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="time-tzname"><strong>tzname</strong></a>(...)</dt><dd><tt>Return&nbsp;self.<strong>tzinfo</strong>.<a href="#time-tzname">tzname</a>(self).</tt></dd></dl>
+
+<dl><dt><a name="time-utcoffset"><strong>utcoffset</strong></a>(...)</dt><dd><tt>Return&nbsp;self.<strong>tzinfo</strong>.<a href="#time-utcoffset">utcoffset</a>(self).</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>hour</strong></dt>
+</dl>
+<dl><dt><strong>microsecond</strong></dt>
+</dl>
+<dl><dt><strong>minute</strong></dt>
+</dl>
+<dl><dt><strong>second</strong></dt>
+</dl>
+<dl><dt><strong>tzinfo</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#time-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>max</strong> = datetime.time(23, 59, 59, 999999)</dl>
+
+<dl><dt><strong>min</strong> = datetime.time(0, 0)</dl>
+
+<dl><dt><strong>resolution</strong> = datetime.timedelta(0, 0, 1)</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="timedelta">class <strong>timedelta</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Difference&nbsp;between&nbsp;two&nbsp;<a href="#datetime">datetime</a>&nbsp;values.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="timedelta-__abs__"><strong>__abs__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__abs__">__abs__</a>()&nbsp;&lt;==&gt;&nbsp;abs(x)</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__add__"><strong>__add__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__div__"><strong>__div__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__div__">__div__</a>(y)&nbsp;&lt;==&gt;&nbsp;x/y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__floordiv__"><strong>__floordiv__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__floordiv__">__floordiv__</a>(y)&nbsp;&lt;==&gt;&nbsp;x//y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__mul__"><strong>__mul__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__mul__">__mul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__neg__"><strong>__neg__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__neg__">__neg__</a>()&nbsp;&lt;==&gt;&nbsp;-x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__nonzero__"><strong>__nonzero__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__nonzero__">__nonzero__</a>()&nbsp;&lt;==&gt;&nbsp;x&nbsp;!=&nbsp;0</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__pos__"><strong>__pos__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__pos__">__pos__</a>()&nbsp;&lt;==&gt;&nbsp;+x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__radd__"><strong>__radd__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__radd__">__radd__</a>(y)&nbsp;&lt;==&gt;&nbsp;y+x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__rdiv__"><strong>__rdiv__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__rdiv__">__rdiv__</a>(y)&nbsp;&lt;==&gt;&nbsp;y/x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt><a href="#timedelta-__reduce__">__reduce__</a>()&nbsp;-&gt;&nbsp;(cls,&nbsp;state)</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__rfloordiv__"><strong>__rfloordiv__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__rfloordiv__">__rfloordiv__</a>(y)&nbsp;&lt;==&gt;&nbsp;y//x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__rmul__"><strong>__rmul__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__rmul__">__rmul__</a>(y)&nbsp;&lt;==&gt;&nbsp;y*x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__rsub__"><strong>__rsub__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__rsub__">__rsub__</a>(y)&nbsp;&lt;==&gt;&nbsp;y-x</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="timedelta-__sub__"><strong>__sub__</strong></a>(...)</dt><dd><tt>x.<a href="#timedelta-__sub__">__sub__</a>(y)&nbsp;&lt;==&gt;&nbsp;x-y</tt></dd></dl>
+
+<dl><dt><a name="timedelta-total_seconds"><strong>total_seconds</strong></a>(...)</dt><dd><tt>Total&nbsp;seconds&nbsp;in&nbsp;the&nbsp;duration.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>days</strong></dt>
+<dd><tt>Number&nbsp;of&nbsp;days.</tt></dd>
+</dl>
+<dl><dt><strong>microseconds</strong></dt>
+<dd><tt>Number&nbsp;of&nbsp;microseconds&nbsp;(&gt;=&nbsp;0&nbsp;and&nbsp;less&nbsp;than&nbsp;1&nbsp;second).</tt></dd>
+</dl>
+<dl><dt><strong>seconds</strong></dt>
+<dd><tt>Number&nbsp;of&nbsp;seconds&nbsp;(&gt;=&nbsp;0&nbsp;and&nbsp;less&nbsp;than&nbsp;1&nbsp;day).</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#timedelta-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>max</strong> = datetime.timedelta(999999999, 86399, 999999)</dl>
+
+<dl><dt><strong>min</strong> = datetime.timedelta(-999999999)</dl>
+
+<dl><dt><strong>resolution</strong> = datetime.timedelta(0, 0, 1)</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="tzinfo">class <strong>tzinfo</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Abstract&nbsp;base&nbsp;class&nbsp;for&nbsp;<a href="#time">time</a>&nbsp;zone&nbsp;info&nbsp;objects.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="tzinfo-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#tzinfo-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="tzinfo-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt>-&gt;&nbsp;(cls,&nbsp;state)</tt></dd></dl>
+
+<dl><dt><a name="tzinfo-dst"><strong>dst</strong></a>(...)</dt><dd><tt><a href="#datetime">datetime</a>&nbsp;-&gt;&nbsp;DST&nbsp;offset&nbsp;in&nbsp;minutes&nbsp;east&nbsp;of&nbsp;UTC.</tt></dd></dl>
+
+<dl><dt><a name="tzinfo-fromutc"><strong>fromutc</strong></a>(...)</dt><dd><tt><a href="#datetime">datetime</a>&nbsp;in&nbsp;UTC&nbsp;-&gt;&nbsp;<a href="#datetime">datetime</a>&nbsp;in&nbsp;local&nbsp;<a href="#time">time</a>.</tt></dd></dl>
+
+<dl><dt><a name="tzinfo-tzname"><strong>tzname</strong></a>(...)</dt><dd><tt><a href="#datetime">datetime</a>&nbsp;-&gt;&nbsp;string&nbsp;name&nbsp;of&nbsp;<a href="#time">time</a>&nbsp;zone.</tt></dd></dl>
+
+<dl><dt><a name="tzinfo-utcoffset"><strong>utcoffset</strong></a>(...)</dt><dd><tt><a href="#datetime">datetime</a>&nbsp;-&gt;&nbsp;minutes&nbsp;east&nbsp;of&nbsp;UTC&nbsp;(negative&nbsp;for&nbsp;west&nbsp;of&nbsp;UTC).</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#tzinfo-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>MAXYEAR</strong> = 9999<br>
+<strong>MINYEAR</strong> = 1<br>
+<strong>datetime_CAPI</strong> = &lt;capsule object "datetime.datetime_CAPI"&gt;</td></tr></table>
+</body></html>

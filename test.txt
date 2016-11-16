@@ -1,0 +1,5 @@
+test
+2016-11-14 A test task +tstprj @office due:today
+(C) 2016-11-14 テストタスク +家計簿 @home due:2016-11-14 rec:1w
+test task
+(A) 2016-11-15 test word +prj @home due:2016-11-14

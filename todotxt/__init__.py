@@ -4,10 +4,13 @@
 from datetime import datetime
 from operator import attrgetter
 import re
+import codecs
 
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
-CONTEXT_REGEX = '(@\\w+)'
-PROJECT_REGEX = '(\\+\\w+)'
+##CONTEXT_REGEX = '(@\\w+)'
+##PROJECT_REGEX = '(\\+\\w+)'
+CONTEXT_REGEX = '(@\\S+)'   # Unicode Contexts hit
+PROJECT_REGEX = '(\\+\\S+)' # Unicode Projects hit
 
 NO_PRIORITY_CHARACTER = '^'
 
@@ -135,7 +138,7 @@ class Tasks(object):
 
         self._trigger_event('load')
 
-        with open(self.path, 'r') as f:
+        with codecs.open(self.path, 'r', 'utf-8') as f:
             i = 0
             for line in f:
                 self.tasks.append(Task(line.strip(), i))
@@ -155,7 +158,7 @@ class Tasks(object):
         self._trigger_event('save')
 
         filename = self.path if filename is None else filename
-        with open(filename, 'w') as f:
+        with codecs.open(filename, 'w', 'utf-8') as f:
             for task in self.tasks:
                 f.write("{0}\n".format(task.rebuild_raw_todo()))
 
@@ -179,7 +182,7 @@ class Tasks(object):
         """Sorts the tasks by given criteria and returns a new Tasks object
         with the new ordering. The criteria argument can have the following
         values:
-            - id
+            - tid
             - priority
             - finished
             - created_date
@@ -189,7 +192,7 @@ class Tasks(object):
         if criteria[0] == '-':
             reversed = True
 
-        criterias = ['id', 'priority', 'finished', 'created_date',
+        criterias = ['tid', 'priority', 'finished', 'created_date',
                      'finished_date']
 
         if criteria in criterias:
@@ -238,3 +241,13 @@ class Tasks(object):
 
     def __repr__(self):
         return "<Tasks {0}>".format(self.__str__())
+
+    ## customize methods
+    def __iter__(self):
+        return iter(self.tasks)
+
+    def __len__(self):
+        return len(self.tasks)
+
+    def __getitem__(self, idx):
+        return self.tasks[idx]
