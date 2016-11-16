@@ -9,8 +9,8 @@ import codecs
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
 ##CONTEXT_REGEX = '(@\\w+)'
 ##PROJECT_REGEX = '(\\+\\w+)'
-CONTEXT_REGEX = '(@\\S+)'   # Unicode Contexts hit
-PROJECT_REGEX = '(\\+\\S+)' # Unicode Projects hit
+CONTEXT_REGEX = '\s(@\\S+)'   # Unicode Contexts hit
+PROJECT_REGEX = '\s(\\+\\S+)' # Unicode Projects hit
 
 NO_PRIORITY_CHARACTER = '^'
 
@@ -66,10 +66,12 @@ class Task(object):
 
         self.todo = ' '.join(splits)
 
+        ## match = [x for x in splits if x[0] == "@"]
         match = re.findall(CONTEXT_REGEX, self.todo)
         if len(match) != 0:
             self.contexts = match
 
+        ## match = [x for x in splits if x[0] == "+"]
         match = re.findall(PROJECT_REGEX, self.todo)
         if len(match) != 0:
             self.projects = match
@@ -116,6 +118,12 @@ class Task(object):
     def __repr__(self):
         return "<Task {0} '{1}'>".format(self.tid, self.raw_todo)
 
+    ## customize metods
+    def __eq__(self, other):
+        return True if self.raw_todo == other.raw_todo else False
+
+    def __ne__(self, other):
+        return True if self.raw_todo != other.raw_todo else False
 
 class Tasks(object):
 
@@ -249,5 +257,38 @@ class Tasks(object):
     def __len__(self):
         return len(self.tasks)
 
-    def __getitem__(self, idx):
-        return self.tasks[idx]
+    def __getitem__(self, key):
+        return self.tasks[key]
+
+    def __setitem__(self, key, value):
+        if isinstance(value, str):
+            self.tasks[key] = Task(value)
+        elif isinstance(value, Task):
+            self.tasks[key] = value
+
+    def __delitem__(self, key):
+        del self.tasks[key]
+
+    def append(self, value="dummy"):
+        """Append to Tasks.tasks collection.
+
+        Args:
+            value(="dummy"): text or Task object
+        """
+        self.tasks.append(value if isinstance(value, Task)
+                                else Task(value))
+    def get_projects(self):
+        """Get projects in tasks collection."""
+        s = set()
+        for i in self.tasks:
+            for j in i.projects:
+                s.add(j)
+        return sorted(list(s))
+
+    def get_contexts(self):
+        """Get contexts in tasks collection."""
+        s = set()
+        for i in self.tasks:
+            for j in i.contexts:
+                s.add(j)
+        return sorted(list(s))
