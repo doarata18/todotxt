@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from operator import attrgetter
+from copy import deepcopy
 import re
 import codecs
 
@@ -269,14 +270,17 @@ class Tasks(object):
     def __delitem__(self, key):
         del self.tasks[key]
 
-    def append(self, value="dummy"):
+    def append(self, value="[dummy task]"):
         """Append to Tasks.tasks collection.
 
         Args:
-            value(="dummy"): text or Task object
+            value(="[dummy task]"): text or Task object(=deepcopy(obj))
         """
-        self.tasks.append(value if isinstance(value, Task)
-                                else Task(value))
+        if isinstance(value, Task):
+            self.tasks.append(deepcopy(value))
+        else:
+            self.add(value)
+
     def get_projects(self):
         """Get projects in tasks collection."""
         s = set()
