@@ -12,9 +12,14 @@ DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
 ##PROJECT_REGEX = '(\\+\\w+)'
 CONTEXT_REGEX = '\s(@\\S+)'   # Unicode Contexts hit
 PROJECT_REGEX = '\s(\\+\\S+)' # Unicode Projects hit
-
 NO_PRIORITY_CHARACTER = '^'
+DUEDATE_REGEX = "due\\:(\\S+)"
+THRESHOLDDATE_REGEX = "t\\:(\\S+)"
+RECURSIVE_REGEX = "rec\\:(\\S+)"
 
+DUEDATE_SIG = "due:"
+THRESHOLDDATE_SIG = "t:"
+RECURSIVE_SIG = "rec:"
 
 class Task(object):
 
@@ -28,6 +33,9 @@ class Task(object):
     finished = False
     created_date = None
     finished_date = None
+    threshold_date = None
+    due_date = None
+    recursive = None
 
     def __init__(self, raw_todo, id=-1):
 
@@ -64,6 +72,37 @@ class Task(object):
         if match is not None:
             self.created_date = datetime.strptime(match.group(0), "%Y-%m-%d")
             splits = splits[1:]
+
+        # threshold date getting
+        match = [x for x in splits if x.startswith(THRESHOLDDATE_SIG)]
+        if len(match) != 0:
+            # keyword(today, mon, monday, +[0-9]+[dwmyb])解析入れるなら、ここ
+            # 日付書式エラー時の処理も必要
+            self.threshold_date = \
+                datetime.strptime(
+                    match[0].lstrip(THRESHOLDDATE_SIG), "%Y-%m-%d")
+            # splitsから"t:"節を取り除く処理
+            for i in match:
+                splits.remove(i)
+
+        # due-date getting
+        match = [x for x in splits if x.startswith(DUEDATE_SIG)]
+        if len(match) != 0:
+            # keyword(today, mon, monday, +[0-9]+[dwmyb])解析入れるなら、ここ
+            # 日付書式エラー時の処理も必要
+            self.due_date = \
+                datetime.strptime(match[0].lstrip(DUEDATE_SIG), "%Y-%m-%d")
+            # splitsから"due:"節を取り除く処理
+            for i in match:
+                splits.remove(i)
+
+        # rec: extension getting
+        match = [x for x in splits if x.startswith(RECURSIVE_SIG)]
+        if len(match) != 0:
+            self.recursive = match[0].lstrip(RECURSIVE_SIG)
+            # splitsから"rec:"節を取り除く処理
+            for i in match:
+                splits.remove(i)
 
         self.todo = ' '.join(splits)
 
@@ -106,10 +145,25 @@ class Task(object):
         priority = '(' + self.priority + ') ' if \
             self.priority != NO_PRIORITY_CHARACTER else ''
 
-        self.raw_todo = "{0}{1}{2}{3}{4}".format(finished, finished_date,
-                                                 priority,
-                                                 created_date,
-                                                 self.todo)
+        due = DUEDATE_SIG + self.due_date.strftime("%Y-%m-%d ") if \
+            self.due_date is not None else ""
+        
+        threshold = THRESHOLDDATE_SIG \
+                         + self.threshold_date.strftime("%Y-%m-%d ") if \
+            self.threshold_date is not None else ""
+
+        recursive = RECURSIVE_SIG + self.recursive if \
+            self.recursive is not None else ""
+
+        self.raw_todo = \
+            "{0}{1}{2}{3}{4}{5}{6}{7}".format(finished,
+                                              finished_date,
+                                              priority,
+                                              created_date,
+                                              self.todo + " ",
+                                              threshold,
+                                              due,
+                                              recursive)
 
         return self.raw_todo
 
@@ -195,14 +249,17 @@ class Tasks(object):
             - priority
             - finished
             - created_date
-            - finished_date"""
+            - finished_date
+            - due_date
+            - threshold_date
+        """
 
         reversed = False
         if criteria[0] == '-':
             reversed = True
 
         criterias = ['tid', 'priority', 'finished', 'created_date',
-                     'finished_date']
+                     'finished_date', 'due_date', 'threshold_date']
 
         if criteria in criterias:
             return Tasks(self.path,
