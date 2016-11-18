@@ -46,7 +46,7 @@
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="Task-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>##&nbsp;customize&nbsp;metods</tt></dd></dl>
 
-<dl><dt><a name="Task-__init__"><strong>__init__</strong></a>(self, raw_todo, id<font color="#909090">=-1</font>)</dt></dl>
+<dl><dt><a name="Task-__init__"><strong>__init__</strong></a>(self, raw_todo<font color="#909090">='[dummy task]'</font>, id<font color="#909090">=-1</font>)</dt></dl>
 
 <dl><dt><a name="Task-__ne__"><strong>__ne__</strong></a>(self, other)</dt></dl>
 
@@ -172,7 +172,9 @@ values:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;priority<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;finished<br>
 &nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;created_date<br>
-&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;finished_date</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;finished_date<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;due_date<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;threshold_date</tt></dd></dl>
 
 <dl><dt><a name="Tasks-save"><strong>save</strong></a>(self, filename<font color="#909090">=None</font>)</dt><dd><tt>Saves&nbsp;tasks&nbsp;that&nbsp;are&nbsp;saved&nbsp;in&nbsp;this&nbsp;manager.&nbsp;If&nbsp;specified&nbsp;they&nbsp;will<br>
 be&nbsp;saved&nbsp;in&nbsp;the&nbsp;filename&nbsp;arguemnt&nbsp;of&nbsp;this&nbsp;function.&nbsp;Otherwise&nbsp;the<br>
@@ -198,6 +200,19 @@ Data and other attributes defined here:<br>
 <dl><dt><strong>tasks</strong> = []</dl>
 
 </td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-date_value"><strong>date_value</strong></a>(arg_date)</dt><dd><tt>Expand&nbsp;Date&nbsp;Value.<br>
+In&nbsp;due_date(due:)&nbsp;and&nbsp;threshold_date(t:),&nbsp;specify&nbsp;some&nbsp;keywords&nbsp;available.<br>
+&nbsp;&nbsp;-&nbsp;YYYY-MM-DD,&nbsp;YYYY/MM/DD<br>
+&nbsp;&nbsp;-&nbsp;mon,&nbsp;tue,&nbsp;wed,&nbsp;thu,&nbsp;fri,&nbsp;sat,&nbsp;sun<br>
+&nbsp;&nbsp;-&nbsp;monday,&nbsp;tuesday,&nbsp;wednesday,&nbsp;thursday,&nbsp;friday,&nbsp;saturday,&nbsp;sunday<br>
+&nbsp;&nbsp;-&nbsp;today,&nbsp;tommorow</tt></dd></dl>
+</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>

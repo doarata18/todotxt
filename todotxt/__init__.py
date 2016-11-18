@@ -2,6 +2,7 @@
 """The main endpoint for todotxt."""
 
 from datetime import datetime
+from datetime import timedelta
 from operator import attrgetter
 from copy import deepcopy
 import re
@@ -21,6 +22,41 @@ DUEDATE_SIG = "due:"
 THRESHOLDDATE_SIG = "t:"
 RECURSIVE_SIG = "rec:"
 
+def date_value(arg_date):
+    """
+    Expand Date Value.
+    In due_date(due:) and threshold_date(t:), specify some keywords available.
+      - YYYY-MM-DD, YYYY/MM/DD
+      - mon, tue, wed, thu, fri, sat, sun
+      - monday, tuesday, wednesday, thursday, friday, saturday, sunday
+      - today, tommorow
+    """
+    WEEKDAYS = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
+                "monday":0, "tuesday":1, "wednesday":2, "thursday":3,
+                "friday":4, "saturday":5, "sunday":6}
+
+    KEYWORDS = {"today":0, "tomorrow":1}
+
+    retval = None
+    arg_date = arg_date.replace("/", "-")
+    
+    match = re.search(DATE_REGEX, arg_date) # ISO-Format Date
+    if match is not None:
+        retval = datetime.strptime(match.group(0), "%Y-%m-%d")
+
+    elif arg_date in WEEKDAYS:
+        today = datetime(*datetime.today().timetuple()[:3])
+        wdtdy = today.weekday()
+        wdtgt = WEEKDAYS[arg_date]
+        retval = today + timedelta(days=(wdtgt - wdtdy
+                                         + (7 if wdtgt < wdtdy else 0)))
+
+    elif arg_date in KEYWORDS:
+        retval = datetime(*datetime.today().timetuple()[:3]) \
+                 + timedelta(days=KEYWORDS[arg_date])
+
+    return retval
+
 class Task(object):
 
     """A class that represents a task."""
@@ -37,7 +73,7 @@ class Task(object):
     due_date = None
     recursive = None
 
-    def __init__(self, raw_todo, id=-1):
+    def __init__(self, raw_todo="[dummy task]", id=-1):
 
         self.tid = id
         self.raw_todo = raw_todo
@@ -47,6 +83,7 @@ class Task(object):
     def parse(self):
         """Parse the text of self.raw_todo and update internal state."""
 
+        rebuild_flg = False
         text = self.raw_todo
         splits = text.split(' ')
         if text[0] == 'x' and text[1] == ' ':
@@ -76,31 +113,32 @@ class Task(object):
         # threshold date getting
         match = [x for x in splits if x.startswith(THRESHOLDDATE_SIG)]
         if len(match) != 0:
-            # keyword(today, mon, monday, +[0-9]+[dwmyb])‰ðÍ“ü‚ê‚é‚È‚çA‚±‚±
-            # “ú•t‘Ž®ƒGƒ‰[Žž‚Ìˆ—‚à•K—v
+            # keyword(today, mon, monday, +[0-9]+[dwmyb])è§£æžå…¥ã‚Œã‚‹ãªã‚‰ã€ã“ã“
+            # æ—¥ä»˜æ›¸å¼ã‚¨ãƒ©ãƒ¼æ™‚ã®å‡¦ç†ã‚‚å¿…è¦
             self.threshold_date = \
-                datetime.strptime(
-                    match[0].lstrip(THRESHOLDDATE_SIG), "%Y-%m-%d")
-            # splits‚©‚ç"t:"ß‚ðŽæ‚èœ‚­ˆ—
+                date_value(match[0][len(THRESHOLDDATE_SIG):])
+            # splitsã‹ã‚‰"t:"ç¯€ã‚’å–ã‚Šé™¤ãå‡¦ç†
             for i in match:
                 splits.remove(i)
+            rebuild_flg = True
 
         # due-date getting
         match = [x for x in splits if x.startswith(DUEDATE_SIG)]
         if len(match) != 0:
-            # keyword(today, mon, monday, +[0-9]+[dwmyb])‰ðÍ“ü‚ê‚é‚È‚çA‚±‚±
-            # “ú•t‘Ž®ƒGƒ‰[Žž‚Ìˆ—‚à•K—v
+            # keyword(today, mon, monday, +[0-9]+[dwmyb])è§£æžå…¥ã‚Œã‚‹ãªã‚‰ã€ã“ã“
+            # æ—¥ä»˜æ›¸å¼ã‚¨ãƒ©ãƒ¼æ™‚ã®å‡¦ç†ã‚‚å¿…è¦
             self.due_date = \
-                datetime.strptime(match[0].lstrip(DUEDATE_SIG), "%Y-%m-%d")
-            # splits‚©‚ç"due:"ß‚ðŽæ‚èœ‚­ˆ—
+                date_value(match[0][len(DUEDATE_SIG):])
+            # splitsã‹ã‚‰"due:"ç¯€ã‚’å–ã‚Šé™¤ãå‡¦ç†
             for i in match:
                 splits.remove(i)
+            rebuild_flg = True
 
         # rec: extension getting
         match = [x for x in splits if x.startswith(RECURSIVE_SIG)]
         if len(match) != 0:
             self.recursive = match[0].lstrip(RECURSIVE_SIG)
-            # splits‚©‚ç"rec:"ß‚ðŽæ‚èœ‚­ˆ—
+            # splitsã‹ã‚‰"rec:"ç¯€ã‚’å–ã‚Šé™¤ãå‡¦ç†
             for i in match:
                 splits.remove(i)
 
@@ -115,6 +153,9 @@ class Task(object):
         match = re.findall(PROJECT_REGEX, self.todo)
         if len(match) != 0:
             self.projects = match
+
+        if rebuild_flg: # date_value()ã‚’å‘¼ã³å‡ºã—ã§æ—¥ä»˜è‡ªå‹•å±•é–‹ã—ãŸå¯èƒ½æ€§ãŒã‚ã‚‹
+            self.rebuild_raw_todo()
 
     def matches(self, text):
         """Determines whether the tasks matches the text.
@@ -163,7 +204,7 @@ class Task(object):
                                               self.todo + " ",
                                               threshold,
                                               due,
-                                              recursive)
+                                              recursive).strip()
 
         return self.raw_todo
 
