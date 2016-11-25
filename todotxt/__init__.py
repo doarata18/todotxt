@@ -9,11 +9,11 @@ import re
 import codecs
 
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
-##CONTEXT_REGEX = '(@\\w+)'
-##PROJECT_REGEX = '(\\+\\w+)'
-CONTEXT_REGEX = '\s(@\\S+)'   # Unicode Contexts hit
-PROJECT_REGEX = '\s(\\+\\S+)' # Unicode Projects hit
-NO_PRIORITY_CHARACTER = '^'
+##CONTEXT_REGEX = "(@\\w+)"
+##PROJECT_REGEX = "(\\+\\w+)"
+CONTEXT_REGEX = "\s(@\\S+)"   # Unicode Contexts hit
+PROJECT_REGEX = "\s(\\+\\S+)" # Unicode Projects hit
+NO_PRIORITY_CHARACTER = "^"
 DUEDATE_REGEX = "due\\:(\\S+)"
 THRESHOLDDATE_REGEX = "t\\:(\\S+)"
 RECURSIVE_REGEX = "rec\\:(\\S+)"
@@ -29,16 +29,23 @@ def date_value(arg_date):
       - YYYY-MM-DD, YYYY/MM/DD
       - mon, tue, wed, thu, fri, sat, sun
       - monday, tuesday, wednesday, thursday, friday, saturday, sunday
-      - today, tommorow
+      - today, tommorow, yesterday
+      
+      Args: arg_date / str or datetime.datetime or datetime.date
+      
+      Returns: datetime.datetime
     """
     WEEKDAYS = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
                 "monday":0, "tuesday":1, "wednesday":2, "thursday":3,
                 "friday":4, "saturday":5, "sunday":6}
 
-    KEYWORDS = {"today":0, "tomorrow":1}
+    KEYWORDS = {"today":0, "tomorrow":1, "yesterday":-1}
 
     retval = None
-    arg_date = arg_date.replace("/", "-")
+    if type(arg_date) in type.mro(datetime): # datetime型, date型, (object型)
+        arg_date = arg_date.strftime("%Y-%m-%d")
+    else:
+        arg_date = arg_date.replace("/", "-")
     
     match = re.search(DATE_REGEX, arg_date) # ISO-Format Date
     if match is not None:
@@ -61,9 +68,9 @@ class Task(object):
 
     """A class that represents a task."""
     tid = None
-    raw_todo = ''
+    raw_todo = ""
     priority = NO_PRIORITY_CHARACTER
-    todo = ''
+    todo = ""
     projects = []
     contexts = []
     finished = False
@@ -85,25 +92,31 @@ class Task(object):
 
         rebuild_flg = False
         text = self.raw_todo
-        splits = text.split(' ')
-        if text[0] == 'x' and text[1] == ' ':
+        splits = text.split(" ")
+        if text[0] == "x" and text[1] == " ":
             self.finished = True
             splits = splits[1:]
 
-        match = re.search(DATE_REGEX, splits[0])
-        if match is not None:
-            self.finished_date = datetime.strptime(match.group(0), "%Y-%m-%d")
-            splits = splits[1:]
+            match = re.search(DATE_REGEX, splits[0])
+            if match is not None:
+                self.finished_date = \
+                    datetime.strptime(match.group(0), "%Y-%m-%d")
+                splits = splits[1:]
+        else:
+            self.finished = False
+            self.finished_date = None
 
         head = splits[0]
 
         if (len(head) == 3) and \
-                (head[0] == '(') and \
-                (head[2] == ')') and \
+                (head[0] == "(") and \
+                (head[2] == ")") and \
                 (ord(head[1]) >= 65 and ord(head[1]) <= 90):
 
             self.priority = head[1]
             splits = splits[1:]
+        else:
+            self.priority = NO_PRIORITY_CHARACTER
 
         match = re.search(DATE_REGEX, splits[0])
         if match is not None:
@@ -142,7 +155,7 @@ class Task(object):
             for i in match:
                 splits.remove(i)
 
-        self.todo = ' '.join(splits)
+        self.todo = " ".join(splits)
 
         ## match = [x for x in splits if x[0] == "@"]
         match = re.findall(CONTEXT_REGEX, self.todo)
@@ -176,35 +189,37 @@ class Task(object):
             The rebuilt self.raw_todo.
         """
 
-        finished = 'x ' if self.finished else ''
+        finished = "x " if self.finished else ""
         created_date = self.created_date.strftime("%Y-%m-%d ") if \
-            self.created_date is not None else ''
+            self.created_date is not None else ""
 
         finished_date = self.finished_date.strftime("%Y-%m-%d ") if \
-            self.finished_date is not None else ''
+            self.finished and self.finished_date is not None else ""
 
-        priority = '(' + self.priority + ') ' if \
-            self.priority != NO_PRIORITY_CHARACTER else ''
+        priority = "(" + self.priority + ") " if \
+            self.priority != NO_PRIORITY_CHARACTER else ""
 
-        due = DUEDATE_SIG + self.due_date.strftime("%Y-%m-%d ") if \
-            self.due_date is not None else ""
+        due = DUEDATE_SIG \
+            + date_value(self.due_date).strftime("%Y-%m-%d ") if \
+                self.due_date is not None else ""
         
         threshold = THRESHOLDDATE_SIG \
-                         + self.threshold_date.strftime("%Y-%m-%d ") if \
-            self.threshold_date is not None else ""
+            + date_value(self.threshold_date).strftime("%Y-%m-%d ") if \
+                self.threshold_date is not None else ""
 
         recursive = RECURSIVE_SIG + self.recursive if \
             self.recursive is not None else ""
 
-        self.raw_todo = \
-            "{0}{1}{2}{3}{4}{5}{6}{7}".format(finished,
-                                              finished_date,
-                                              priority,
-                                              created_date,
-                                              self.todo + " ",
-                                              threshold,
-                                              due,
-                                              recursive).strip()
+        self.raw_todo = "{0}{1}{2}{3}{4}{5}{6}{7}" \
+            .format(finished,
+                    finished_date if self.finished else "",
+                    priority,
+                    created_date,
+                    self.todo + " ",
+                    threshold,
+                    due,
+                    recursive) \
+                .strip()
 
         return self.raw_todo
 
@@ -226,7 +241,7 @@ class Tasks(object):
     """Task manager that handles loading, saving and filtering tasks."""
 
     # the location of the todo.txt file
-    path = ''
+    path = ""
     tasks = []
 
     # the dict that holds event handlers
@@ -240,15 +255,15 @@ class Tasks(object):
         """Loads tasks from given file, parses them into internal
         representation and stores them in this manager's object."""
 
-        self._trigger_event('load')
+        self._trigger_event("load")
 
-        with codecs.open(self.path, 'r', 'utf-8') as f:
+        with codecs.open(self.path, "r", "utf-8") as f:
             i = 0
             for line in f:
                 self.tasks.append(Task(line.strip(), i))
                 i += 1
 
-        self._trigger_event('loaded')
+        self._trigger_event("loaded")
 
     def save(self, filename=None):
         """Saves tasks that are saved in this manager. If specified they will
@@ -259,14 +274,14 @@ class Tasks(object):
             filename -- An optional name of the file to save the tasklist into.
         """
 
-        self._trigger_event('save')
+        self._trigger_event("save")
 
         filename = self.path if filename is None else filename
-        with codecs.open(filename, 'w', 'utf-8') as f:
+        with codecs.open(filename, "w", "utf-8") as f:
             for task in self.tasks:
                 f.write("{0}\n".format(task.rebuild_raw_todo()))
 
-        self._trigger_event('saved')
+        self._trigger_event("saved")
 
     def filter_by(self, text):
         """Filteres the tasks by a given filter text. Returns a new Tasks
@@ -296,15 +311,16 @@ class Tasks(object):
         """
 
         reversed = False
-        if criteria[0] == '-':
+        if criteria[0] == "-":
             reversed = True
 
-        criterias = ['tid', 'priority', 'finished', 'created_date',
-                     'finished_date', 'due_date', 'threshold_date']
+        criterias = ["tid", "priority", "finished", "created_date",
+                     "finished_date", "due_date", "threshold_date"]
 
         if criteria in criterias:
             return Tasks(self.path,
                          sorted(self.tasks, key=attrgetter(criteria),
+                                cmp = lambda x, y: cmp(str(x), str(y)),
                                 reverse=reversed))
         else:
             return self
@@ -372,7 +388,7 @@ class Tasks(object):
         """Append to Tasks.tasks collection.
 
         Args:
-            value(="[dummy task]"): text or Task object(=deepcopy(obj))
+            value(='[dummy task]'): text or Task object(=deepcopy(obj))
         """
         if isinstance(value, Task):
             self.tasks.append(deepcopy(value))
@@ -394,3 +410,20 @@ class Tasks(object):
             for j in i.contexts:
                 s.add(j)
         return sorted(list(s))
+
+    def sort(self):
+        """Tasks order sort by tid."""
+        self.tasks = sorted(self.tasks, cmp = lambda x, y: cmp(x.tid, y.tid))
+
+    def renum(self, start=0, step=1):
+        """Renumber tasks tids."""
+        gen_tid = \
+            (x for x in range(start, len(self.tasks) * step + start, step))
+        self.sort()
+        for i in self.tasks:
+            i.tid = gen_tid.next()
+
+    def reload(self):
+        """Crear TasksList and Loads tasks from given file."""
+        self.tasks = []
+        self.load()
