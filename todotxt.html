@@ -44,13 +44,13 @@
 <td colspan=2><tt>A&nbsp;class&nbsp;that&nbsp;represents&nbsp;a&nbsp;task.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Task-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+<dl><dt><a name="Task-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>##&nbsp;customize&nbsp;metods</tt></dd></dl>
 
 <dl><dt><a name="Task-__init__"><strong>__init__</strong></a>(self, raw_todo<font color="#909090">='[dummy task]'</font>, id<font color="#909090">=-1</font>)</dt></dl>
 
 <dl><dt><a name="Task-__ne__"><strong>__ne__</strong></a>(self, other)</dt></dl>
 
-<dl><dt><a name="Task-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>##&nbsp;customize&nbsp;metods</tt></dd></dl>
+<dl><dt><a name="Task-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Task-__str__"><strong>__str__</strong></a>(self)</dt></dl>
 
@@ -119,11 +119,11 @@ Data and other attributes defined here:<br>
 
 <dl><dt><a name="Tasks-__init__"><strong>__init__</strong></a>(self, path<font color="#909090">=None</font>, tasks<font color="#909090">=None</font>)</dt></dl>
 
-<dl><dt><a name="Tasks-__iter__"><strong>__iter__</strong></a>(self)</dt></dl>
+<dl><dt><a name="Tasks-__iter__"><strong>__iter__</strong></a>(self)</dt><dd><tt>##&nbsp;customize&nbsp;methods</tt></dd></dl>
 
 <dl><dt><a name="Tasks-__len__"><strong>__len__</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="Tasks-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>##&nbsp;customize&nbsp;methods</tt></dd></dl>
+<dl><dt><a name="Tasks-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Tasks-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt></dl>
 
@@ -147,6 +147,9 @@ Args:<br>
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;value(='[dummy&nbsp;task]'):&nbsp;text&nbsp;or&nbsp;<a href="#Task">Task</a>&nbsp;<a href="__builtin__.html#object">object</a>(=deepcopy(obj))</tt></dd></dl>
+
+<dl><dt><a name="Tasks-create_recursive_tasks"><strong>create_recursive_tasks</strong></a>(self)</dt><dd><tt>Create&nbsp;recursicve&nbsp;tasks&nbsp;from&nbsp;finished&nbsp;tasks.<br>
+rec&nbsp;syntax:&nbsp;"rec:"\+*[0-9]+[dwmyb]</tt></dd></dl>
 
 <dl><dt><a name="Tasks-filter_by"><strong>filter_by</strong></a>(self, text)</dt><dd><tt>Filteres&nbsp;the&nbsp;tasks&nbsp;by&nbsp;a&nbsp;given&nbsp;filter&nbsp;text.&nbsp;Returns&nbsp;a&nbsp;new&nbsp;<a href="#Tasks">Tasks</a><br>
 <a href="__builtin__.html#object">object</a>.&nbsp;Note:&nbsp;the&nbsp;path&nbsp;parameter&nbsp;of&nbsp;the&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;will&nbsp;stay&nbsp;the&nbsp;same.<br>
@@ -237,6 +240,7 @@ In&nbsp;due_date(due:)&nbsp;and&nbsp;threshold_date(t:),&nbsp;specify&nbsp;some&
 <strong>PROJECT_REGEX</strong> = r'\s(\+\S+)'<br>
 <strong>RECURSIVE_REGEX</strong> = r'rec\:(\S+)'<br>
 <strong>RECURSIVE_SIG</strong> = 'rec:'<br>
+<strong>REC_SYNTAX_REGEX</strong> = r'(\+*)([0-9]+)([dwmyb])'<br>
 <strong>THRESHOLDDATE_REGEX</strong> = r't\:(\S+)'<br>
 <strong>THRESHOLDDATE_SIG</strong> = 't:'</td></tr></table>
 </body></html>

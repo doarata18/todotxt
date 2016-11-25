@@ -17,6 +17,7 @@ NO_PRIORITY_CHARACTER = "^"
 DUEDATE_REGEX = "due\\:(\\S+)"
 THRESHOLDDATE_REGEX = "t\\:(\\S+)"
 RECURSIVE_REGEX = "rec\\:(\\S+)"
+REC_SYNTAX_REGEX = "(\+*)([0-9]+)([dwmyb])"
 
 DUEDATE_SIG = "due:"
 THRESHOLDDATE_SIG = "t:"
@@ -155,17 +156,25 @@ class Task(object):
             for i in match:
                 splits.remove(i)
 
-        self.todo = " ".join(splits)
+        ## self.todo = " ".join(splits)
 
         ## match = [x for x in splits if x[0] == "@"]
-        match = re.findall(CONTEXT_REGEX, self.todo)
+        match = re.findall(CONTEXT_REGEX, " ".join(splits))
         if len(match) != 0:
             self.contexts = match
 
+        for i in [x for x in splits if x.startswith("@")]:
+            splits.remove(i)
+
         ## match = [x for x in splits if x[0] == "+"]
-        match = re.findall(PROJECT_REGEX, self.todo)
+        match = re.findall(PROJECT_REGEX, " ".join(splits))
         if len(match) != 0:
             self.projects = match
+
+        for i in [x for x in splits if x.startswith("+")]:
+            splits.remove(i)
+
+        self.todo = " ".join(splits)
 
         if rebuild_flg: # date_value()を呼び出しで日付自動展開した可能性がある
             self.rebuild_raw_todo()
@@ -180,7 +189,7 @@ class Task(object):
             Either True or False.
         """
 
-        return text in self.todo
+        return text in self.raw_todo
 
     def rebuild_raw_todo(self):
         """Rebuilds self.raw_todo from data associated with the Task object.
@@ -199,23 +208,25 @@ class Task(object):
         priority = "(" + self.priority + ") " if \
             self.priority != NO_PRIORITY_CHARACTER else ""
 
-        due = DUEDATE_SIG \
-            + date_value(self.due_date).strftime("%Y-%m-%d ") if \
-                self.due_date is not None else ""
-        
         threshold = THRESHOLDDATE_SIG \
             + date_value(self.threshold_date).strftime("%Y-%m-%d ") if \
                 self.threshold_date is not None else ""
 
+        due = DUEDATE_SIG \
+            + date_value(self.due_date).strftime("%Y-%m-%d ") if \
+                self.due_date is not None else ""
+        
         recursive = RECURSIVE_SIG + self.recursive if \
             self.recursive is not None else ""
 
-        self.raw_todo = "{0}{1}{2}{3}{4}{5}{6}{7}" \
+        self.raw_todo = "{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}" \
             .format(finished,
                     finished_date if self.finished else "",
                     priority,
                     created_date,
                     self.todo + " ",
+                    " ".join(self.projects) + " ",
+                    " ".join(self.contexts) + " ",
                     threshold,
                     due,
                     recursive) \
@@ -427,3 +438,67 @@ class Tasks(object):
         """Crear TasksList and Loads tasks from given file."""
         self.tasks = []
         self.load()
+
+    def create_recursive_tasks(self):
+        """Create recursicve tasks from finished tasks.
+            rec syntax: \"rec:\"\+*[0-9]+[dwmyb]
+        """
+        END_OF_MONTH = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
+                        7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+        for i in [x for x in self.tasks if x.finished and x.recursive != None]:
+            new_task = Task(i.raw_todo)
+            new_task.finished = False
+            new_task.finished_date = None
+            new_task.threshold_date = None
+
+            if i.due_date != None:
+                match = re.search(REC_SYNTAX_REGEX, i.recursive)
+                rec_base = match.group(1)
+                rec_span = int(match.group(2))
+                rec_unit = match.group(3)
+
+                if rec_base == "+":
+                    base_date = i.due_date
+                else:
+                    base_date = i.finished_date if i.finished_date != None \
+                        else datetime(*datetime.today().timetuple()[:3])
+                
+                if rec_unit == "d":
+                    new_due = base_date + timedelta(days=rec_span)
+
+                elif rec_unit == "w":
+                    new_due = base_date + timedelta(days=(rec_span * 7))
+
+                elif rec_unit == "m":
+                    rec_year = base_date.year \
+                             + ((base_date.month + rec_span) // 12)
+                    rec_month = (base_date.month + rec_span) % 12
+
+                    if base_date.day > END_OF_MONTH[rec_month]:
+                        rec_day = END_OF_MONTH[rec_month]
+                        new_due = datetime(rec_year, rec_month, rec_day)
+                        new_due += timedelta(days=(base_date.day - rec_day))
+                    else:
+                        new_due = datetime(rec_year, rec_month, base_date.day)
+                                       
+                elif rec_unit == "y":
+                    if base_date.month == 2:
+                        new_due = datetime(base_date.year + rec_span,
+                                           base_date.month,
+                                           1)
+                        new_due += timedelta(days=(base_date.day - 1))
+                    else:
+                        new_due = datetime(base_date.year + rec_span,
+                                           base_date.month,
+                                           base_date.day)
+                                           
+                elif rec_unit == "b":
+                    new_due = base_date ## pass
+
+                else:
+                    new_due = base_date
+                
+                new_task.due_date = new_due
+
+            new_task.rebuild_raw_todo()
+            self.tasks.append(new_task)
