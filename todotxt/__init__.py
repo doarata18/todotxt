@@ -2,34 +2,86 @@
 """The main endpoint for todotxt."""
 
 from datetime import datetime
+from datetime import timedelta
 from operator import attrgetter
 from copy import deepcopy
 import re
 import codecs
 
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
-##CONTEXT_REGEX = '(@\\w+)'
-##PROJECT_REGEX = '(\\+\\w+)'
-CONTEXT_REGEX = '\s(@\\S+)'   # Unicode Contexts hit
-PROJECT_REGEX = '\s(\\+\\S+)' # Unicode Projects hit
+##CONTEXT_REGEX = "(@\\w+)"
+##PROJECT_REGEX = "(\\+\\w+)"
+CONTEXT_REGEX = "\s(@\\S+)"   # Unicode Contexts hit
+PROJECT_REGEX = "\s(\\+\\S+)" # Unicode Projects hit
+NO_PRIORITY_CHARACTER = "^"
+DUEDATE_REGEX = "due\\:(\\S+)"
+THRESHOLDDATE_REGEX = "t\\:(\\S+)"
+RECURSIVE_REGEX = "rec\\:(\\S+)"
+REC_SYNTAX_REGEX = "(\+*)([0-9]+)([dwmyb])"
 
-NO_PRIORITY_CHARACTER = '^'
+DUEDATE_SIG = "due:"
+THRESHOLDDATE_SIG = "t:"
+RECURSIVE_SIG = "rec:"
 
+def date_value(arg_date):
+    """
+    Expand Date Value.
+    In due_date(due:) and threshold_date(t:), specify some keywords available.
+      - YYYY-MM-DD, YYYY/MM/DD
+      - mon, tue, wed, thu, fri, sat, sun
+      - monday, tuesday, wednesday, thursday, friday, saturday, sunday
+      - today, tommorow, yesterday
+      
+      Args: arg_date / str or datetime.datetime or datetime.date
+      
+      Returns: datetime.datetime
+    """
+    WEEKDAYS = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
+                "monday":0, "tuesday":1, "wednesday":2, "thursday":3,
+                "friday":4, "saturday":5, "sunday":6}
+
+    KEYWORDS = {"today":0, "tomorrow":1, "yesterday":-1}
+
+    retval = None
+    if type(arg_date) in type.mro(datetime): # datetime型, date型, (object型)
+        arg_date = arg_date.strftime("%Y-%m-%d")
+    else:
+        arg_date = arg_date.replace("/", "-")
+    
+    match = re.search(DATE_REGEX, arg_date) # ISO-Format Date
+    if match is not None:
+        retval = datetime.strptime(match.group(0), "%Y-%m-%d")
+
+    elif arg_date in WEEKDAYS:
+        today = datetime(*datetime.today().timetuple()[:3])
+        wdtdy = today.weekday()
+        wdtgt = WEEKDAYS[arg_date]
+        retval = today + timedelta(days=(wdtgt - wdtdy
+                                         + (7 if wdtgt < wdtdy else 0)))
+
+    elif arg_date in KEYWORDS:
+        retval = datetime(*datetime.today().timetuple()[:3]) \
+                 + timedelta(days=KEYWORDS[arg_date])
+
+    return retval
 
 class Task(object):
 
     """A class that represents a task."""
     tid = None
-    raw_todo = ''
+    raw_todo = ""
     priority = NO_PRIORITY_CHARACTER
-    todo = ''
+    todo = ""
     projects = []
     contexts = []
     finished = False
     created_date = None
     finished_date = None
+    threshold_date = None
+    due_date = None
+    recursive = None
 
-    def __init__(self, raw_todo, id=-1):
+    def __init__(self, raw_todo="[dummy task]", id=-1):
 
         self.tid = id
         self.raw_todo = raw_todo
@@ -39,43 +91,93 @@ class Task(object):
     def parse(self):
         """Parse the text of self.raw_todo and update internal state."""
 
+        rebuild_flg = False
         text = self.raw_todo
-        splits = text.split(' ')
-        if text[0] == 'x' and text[1] == ' ':
+        splits = text.split(" ")
+        if text[0] == "x" and text[1] == " ":
             self.finished = True
             splits = splits[1:]
 
-        match = re.search(DATE_REGEX, splits[0])
-        if match is not None:
-            self.finished_date = datetime.strptime(match.group(0), "%Y-%m-%d")
-            splits = splits[1:]
+            match = re.search(DATE_REGEX, splits[0])
+            if match is not None:
+                self.finished_date = \
+                    datetime.strptime(match.group(0), "%Y-%m-%d")
+                splits = splits[1:]
+        else:
+            self.finished = False
+            self.finished_date = None
 
         head = splits[0]
 
         if (len(head) == 3) and \
-                (head[0] == '(') and \
-                (head[2] == ')') and \
+                (head[0] == "(") and \
+                (head[2] == ")") and \
                 (ord(head[1]) >= 65 and ord(head[1]) <= 90):
 
             self.priority = head[1]
             splits = splits[1:]
+        else:
+            self.priority = NO_PRIORITY_CHARACTER
 
         match = re.search(DATE_REGEX, splits[0])
         if match is not None:
             self.created_date = datetime.strptime(match.group(0), "%Y-%m-%d")
             splits = splits[1:]
 
-        self.todo = ' '.join(splits)
+        # threshold date getting
+        match = [x for x in splits if x.startswith(THRESHOLDDATE_SIG)]
+        if len(match) != 0:
+            # keyword(today, mon, monday, +[0-9]+[dwmyb])解析入れるなら、ここ
+            # 日付書式エラー時の処理も必要
+            self.threshold_date = \
+                date_value(match[0][len(THRESHOLDDATE_SIG):])
+            # splitsから"t:"節を取り除く処理
+            for i in match:
+                splits.remove(i)
+            rebuild_flg = True
+
+        # due-date getting
+        match = [x for x in splits if x.startswith(DUEDATE_SIG)]
+        if len(match) != 0:
+            # keyword(today, mon, monday, +[0-9]+[dwmyb])解析入れるなら、ここ
+            # 日付書式エラー時の処理も必要
+            self.due_date = \
+                date_value(match[0][len(DUEDATE_SIG):])
+            # splitsから"due:"節を取り除く処理
+            for i in match:
+                splits.remove(i)
+            rebuild_flg = True
+
+        # rec: extension getting
+        match = [x for x in splits if x.startswith(RECURSIVE_SIG)]
+        if len(match) != 0:
+            self.recursive = match[0].lstrip(RECURSIVE_SIG)
+            # splitsから"rec:"節を取り除く処理
+            for i in match:
+                splits.remove(i)
+
+        ## self.todo = " ".join(splits)
 
         ## match = [x for x in splits if x[0] == "@"]
-        match = re.findall(CONTEXT_REGEX, self.todo)
+        match = re.findall(CONTEXT_REGEX, " ".join(splits))
         if len(match) != 0:
             self.contexts = match
 
+        for i in [x for x in splits if x.startswith("@")]:
+            splits.remove(i)
+
         ## match = [x for x in splits if x[0] == "+"]
-        match = re.findall(PROJECT_REGEX, self.todo)
+        match = re.findall(PROJECT_REGEX, " ".join(splits))
         if len(match) != 0:
             self.projects = match
+
+        for i in [x for x in splits if x.startswith("+")]:
+            splits.remove(i)
+
+        self.todo = " ".join(splits)
+
+        if rebuild_flg: # date_value()を呼び出しで日付自動展開した可能性がある
+            self.rebuild_raw_todo()
 
     def matches(self, text):
         """Determines whether the tasks matches the text.
@@ -87,7 +189,7 @@ class Task(object):
             Either True or False.
         """
 
-        return text in self.todo
+        return text in self.raw_todo
 
     def rebuild_raw_todo(self):
         """Rebuilds self.raw_todo from data associated with the Task object.
@@ -96,20 +198,39 @@ class Task(object):
             The rebuilt self.raw_todo.
         """
 
-        finished = 'x ' if self.finished else ''
+        finished = "x " if self.finished else ""
         created_date = self.created_date.strftime("%Y-%m-%d ") if \
-            self.created_date is not None else ''
+            self.created_date is not None else ""
 
         finished_date = self.finished_date.strftime("%Y-%m-%d ") if \
-            self.finished_date is not None else ''
+            self.finished and self.finished_date is not None else ""
 
-        priority = '(' + self.priority + ') ' if \
-            self.priority != NO_PRIORITY_CHARACTER else ''
+        priority = "(" + self.priority + ") " if \
+            self.priority != NO_PRIORITY_CHARACTER else ""
 
-        self.raw_todo = "{0}{1}{2}{3}{4}".format(finished, finished_date,
-                                                 priority,
-                                                 created_date,
-                                                 self.todo)
+        threshold = THRESHOLDDATE_SIG \
+            + date_value(self.threshold_date).strftime("%Y-%m-%d ") if \
+                self.threshold_date is not None else ""
+
+        due = DUEDATE_SIG \
+            + date_value(self.due_date).strftime("%Y-%m-%d ") if \
+                self.due_date is not None else ""
+        
+        recursive = RECURSIVE_SIG + self.recursive if \
+            self.recursive is not None else ""
+
+        self.raw_todo = "{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}" \
+            .format(finished,
+                    finished_date if self.finished else "",
+                    priority,
+                    created_date,
+                    self.todo + " ",
+                    " ".join(self.projects) + " ",
+                    " ".join(self.contexts) + " ",
+                    threshold,
+                    due,
+                    recursive) \
+                .strip()
 
         return self.raw_todo
 
@@ -131,7 +252,7 @@ class Tasks(object):
     """Task manager that handles loading, saving and filtering tasks."""
 
     # the location of the todo.txt file
-    path = ''
+    path = ""
     tasks = []
 
     # the dict that holds event handlers
@@ -145,15 +266,15 @@ class Tasks(object):
         """Loads tasks from given file, parses them into internal
         representation and stores them in this manager's object."""
 
-        self._trigger_event('load')
+        self._trigger_event("load")
 
-        with codecs.open(self.path, 'r', 'utf-8') as f:
+        with codecs.open(self.path, "r", "utf-8") as f:
             i = 0
             for line in f:
                 self.tasks.append(Task(line.strip(), i))
                 i += 1
 
-        self._trigger_event('loaded')
+        self._trigger_event("loaded")
 
     def save(self, filename=None):
         """Saves tasks that are saved in this manager. If specified they will
@@ -164,14 +285,14 @@ class Tasks(object):
             filename -- An optional name of the file to save the tasklist into.
         """
 
-        self._trigger_event('save')
+        self._trigger_event("save")
 
         filename = self.path if filename is None else filename
-        with codecs.open(filename, 'w', 'utf-8') as f:
+        with codecs.open(filename, "w", "utf-8") as f:
             for task in self.tasks:
                 f.write("{0}\n".format(task.rebuild_raw_todo()))
 
-        self._trigger_event('saved')
+        self._trigger_event("saved")
 
     def filter_by(self, text):
         """Filteres the tasks by a given filter text. Returns a new Tasks
@@ -195,18 +316,22 @@ class Tasks(object):
             - priority
             - finished
             - created_date
-            - finished_date"""
+            - finished_date
+            - due_date
+            - threshold_date
+        """
 
         reversed = False
-        if criteria[0] == '-':
+        if criteria[0] == "-":
             reversed = True
 
-        criterias = ['tid', 'priority', 'finished', 'created_date',
-                     'finished_date']
+        criterias = ["tid", "priority", "finished", "created_date",
+                     "finished_date", "due_date", "threshold_date"]
 
         if criteria in criterias:
             return Tasks(self.path,
                          sorted(self.tasks, key=attrgetter(criteria),
+                                cmp = lambda x, y: cmp(str(x), str(y)),
                                 reverse=reversed))
         else:
             return self
@@ -274,7 +399,7 @@ class Tasks(object):
         """Append to Tasks.tasks collection.
 
         Args:
-            value(="[dummy task]"): text or Task object(=deepcopy(obj))
+            value(='[dummy task]'): text or Task object(=deepcopy(obj))
         """
         if isinstance(value, Task):
             self.tasks.append(deepcopy(value))
@@ -296,3 +421,84 @@ class Tasks(object):
             for j in i.contexts:
                 s.add(j)
         return sorted(list(s))
+
+    def sort(self):
+        """Tasks order sort by tid."""
+        self.tasks = sorted(self.tasks, cmp = lambda x, y: cmp(x.tid, y.tid))
+
+    def renum(self, start=0, step=1):
+        """Renumber tasks tids."""
+        gen_tid = \
+            (x for x in range(start, len(self.tasks) * step + start, step))
+        self.sort()
+        for i in self.tasks:
+            i.tid = gen_tid.next()
+
+    def reload(self):
+        """Crear TasksList and Loads tasks from given file."""
+        self.tasks = []
+        self.load()
+
+    def create_recursive_tasks(self):
+        """Create recursicve tasks from finished tasks.
+            rec syntax: \"rec:\"\+*[0-9]+[dwmyb]
+        """
+        END_OF_MONTH = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
+                        7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+        for i in [x for x in self.tasks if x.finished and x.recursive != None]:
+            new_task = Task(i.raw_todo)
+            new_task.finished = False
+            new_task.finished_date = None
+            new_task.threshold_date = None
+
+            if i.due_date != None:
+                match = re.search(REC_SYNTAX_REGEX, i.recursive)
+                rec_base = match.group(1)
+                rec_span = int(match.group(2))
+                rec_unit = match.group(3)
+
+                if rec_base == "+":
+                    base_date = i.due_date
+                else:
+                    base_date = i.finished_date if i.finished_date != None \
+                        else datetime(*datetime.today().timetuple()[:3])
+                
+                if rec_unit == "d":
+                    new_due = base_date + timedelta(days=rec_span)
+
+                elif rec_unit == "w":
+                    new_due = base_date + timedelta(days=(rec_span * 7))
+
+                elif rec_unit == "m":
+                    rec_year = base_date.year \
+                             + ((base_date.month + rec_span) // 12)
+                    rec_month = (base_date.month + rec_span) % 12
+
+                    if base_date.day > END_OF_MONTH[rec_month]:
+                        rec_day = END_OF_MONTH[rec_month]
+                        new_due = datetime(rec_year, rec_month, rec_day)
+                        new_due += timedelta(days=(base_date.day - rec_day))
+                    else:
+                        new_due = datetime(rec_year, rec_month, base_date.day)
+                                       
+                elif rec_unit == "y":
+                    if base_date.month == 2:
+                        new_due = datetime(base_date.year + rec_span,
+                                           base_date.month,
+                                           1)
+                        new_due += timedelta(days=(base_date.day - 1))
+                    else:
+                        new_due = datetime(base_date.year + rec_span,
+                                           base_date.month,
+                                           base_date.day)
+                                           
+                elif rec_unit == "b":
+                    new_due = base_date ## pass
+
+                else:
+                    new_due = base_date
+                
+                new_task.due_date = new_due
+
+            new_task.rebuild_raw_todo()
+            self.tasks.append(new_task)

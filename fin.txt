@@ -1,0 +1,16 @@
+x 2016-11-25 (A) test1+day due:2016-11-20 rec:+1d
+x 2016-11-25 (A) test1_day due:2016-11-20 rec:1d
+x (A) test1_day(no_finish_date) due:2016-11-20 rec:1d
+x 2016-11-25 (B) test2+week due:2016-11-26 rec:+2w
+x 2016-11-25 (B) test2_week due:2016-11-26 rec:2w
+x (B) test2_week(no_finish_date) due:2016-11-26 rec:2w
+x 2016-11-25 (C) test2+month due:2016-11-26 rec:+2m
+x 2016-11-25 (C) test2_month due:2016-11-26 rec:2m
+x (C) test2_month(no_finish_date) due:2016-11-26 rec:2m
+x 2016-11-25 (D) test2+year due:2016-11-26 rec:+1y
+x 2016-11-25 (D) test2_year due:2016-11-26 rec:1y
+x (D) test2_year(no_finish_date) due:2016-11-26 rec:1y
+x 2016-02-29 (E) うるう年test(year:finished) due:2016-02-29 rec:1y
+x (E) うるう年test(year:no finish date) due:2016-02-29 rec:+1y
+x 2016-01-30 (F) うるう年test(month:finished) due:2016-01-31 rec:1m
+x (F) うるう年test(month:no_finished_date) due:2016-01-31 rec:+1m
