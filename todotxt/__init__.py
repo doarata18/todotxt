@@ -31,9 +31,9 @@ def date_value(arg_date):
       - mon, tue, wed, thu, fri, sat, sun
       - monday, tuesday, wednesday, thursday, friday, saturday, sunday
       - today, tommorow, yesterday
-      
+
       Args: arg_date / str or datetime.datetime or datetime.date
-      
+
       Returns: datetime.datetime
     """
     WEEKDAYS = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
@@ -47,7 +47,7 @@ def date_value(arg_date):
         arg_date = arg_date.strftime("%Y-%m-%d")
     else:
         arg_date = arg_date.replace("/", "-")
-    
+
     match = re.search(DATE_REGEX, arg_date) # ISO-Format Date
     if match is not None:
         retval = datetime.strptime(match.group(0), "%Y-%m-%d")
@@ -174,7 +174,7 @@ class Task(object):
         for i in [x for x in splits if x.startswith("+")]:
             splits.remove(i)
 
-        self.todo = " ".join(splits)
+        self.todo = " ".join(splits).strip()
 
         if rebuild_flg: # date_value()を呼び出しで日付自動展開した可能性がある
             self.rebuild_raw_todo()
@@ -209,13 +209,13 @@ class Task(object):
             self.priority != NO_PRIORITY_CHARACTER else ""
 
         threshold = THRESHOLDDATE_SIG \
-            + date_value(self.threshold_date).strftime("%Y-%m-%d ") if \
+            + date_value(self.threshold_date).strftime("%Y-%m-%d") if \
                 self.threshold_date is not None else ""
 
         due = DUEDATE_SIG \
-            + date_value(self.due_date).strftime("%Y-%m-%d ") if \
+            + date_value(self.due_date).strftime("%Y-%m-%d") if \
                 self.due_date is not None else ""
-        
+
         recursive = RECURSIVE_SIG + self.recursive if \
             self.recursive is not None else ""
 
@@ -224,13 +224,13 @@ class Task(object):
                     finished_date if self.finished else "",
                     priority,
                     created_date,
-                    self.todo + " ",
-                    " ".join(self.projects) + " ",
-                    " ".join(self.contexts) + " ",
-                    threshold,
-                    due,
-                    recursive) \
-                .strip()
+                    self.todo,
+                    (" " + " ".join(self.projects)) if self.projects else "",
+                    (" " + " ".join(self.contexts)) if self.contexts else "",
+                    (" " + threshold) if threshold else "",
+                    (" " + due) if due else "",
+                    (" " + recursive) if recursive else "" \
+                   ).strip()
 
         return self.raw_todo
 
@@ -253,22 +253,27 @@ class Tasks(object):
 
     # the location of the todo.txt file
     path = ""
+    archive_path = None
     tasks = []
+    archives = []
 
     # the dict that holds event handlers
     handlers = {}
 
-    def __init__(self, path=None, tasks=None):
+    def __init__(self, path=None, archive_path=None, tasks=None):
         self.path = path
+        self.archive_path = archive_path
         self.tasks = tasks if tasks is not None else []
 
-    def load(self):
+    def load(self, filename=None):
         """Loads tasks from given file, parses them into internal
         representation and stores them in this manager's object."""
 
         self._trigger_event("load")
 
-        with codecs.open(self.path, "r", "utf-8") as f:
+        if filename is None:
+            filename = self.path
+        with codecs.open(filename, "r", "utf-8") as f:
             i = 0
             for line in f:
                 self.tasks.append(Task(line.strip(), i))
@@ -276,21 +281,31 @@ class Tasks(object):
 
         self._trigger_event("loaded")
 
-    def save(self, filename=None):
+    def save(self, filename=None, archive_file=None):
         """Saves tasks that are saved in this manager. If specified they will
         be saved in the filename arguemnt of this function. Otherwise the
         default path (self.path) will be used.
 
         Args:
             filename -- An optional name of the file to save the tasklist into.
+            archive_file -- An optional name of the file to save the archived.
         """
 
         self._trigger_event("save")
 
-        filename = self.path if filename is None else filename
+        if filename is None:
+            filename = self.path
         with codecs.open(filename, "w", "utf-8") as f:
             for task in self.tasks:
                 f.write("{0}\n".format(task.rebuild_raw_todo()))
+
+        if archive_file is None:
+            archive_file = self.archive_path
+        if archive_file is not None and len(self.archives) > 0:
+            with codecs.open(archive_file, "a", "utf-8") as f:
+                for arch in self.archives:
+                    f.write("{0}\n".format(arch.rebuild_raw_todo()))
+            self.archives = []
 
         self._trigger_event("saved")
 
@@ -442,9 +457,13 @@ class Tasks(object):
     def create_recursive_tasks(self):
         """Create recursicve tasks from finished tasks.
             rec syntax: \"rec:\"\+*[0-9]+[dwmyb]
+            \"b\" not implement yet...
+
+            Returns: create tasks count.
         """
         END_OF_MONTH = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
                         7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+        cnt_create = 0
         for i in [x for x in self.tasks if x.finished and x.recursive != None]:
             new_task = Task(i.raw_todo)
             new_task.finished = False
@@ -462,7 +481,7 @@ class Tasks(object):
                 else:
                     base_date = i.finished_date if i.finished_date != None \
                         else datetime(*datetime.today().timetuple()[:3])
-                
+
                 if rec_unit == "d":
                     new_due = base_date + timedelta(days=rec_span)
 
@@ -480,7 +499,7 @@ class Tasks(object):
                         new_due += timedelta(days=(base_date.day - rec_day))
                     else:
                         new_due = datetime(rec_year, rec_month, base_date.day)
-                                       
+
                 elif rec_unit == "y":
                     if base_date.month == 2:
                         new_due = datetime(base_date.year + rec_span,
@@ -491,14 +510,26 @@ class Tasks(object):
                         new_due = datetime(base_date.year + rec_span,
                                            base_date.month,
                                            base_date.day)
-                                           
+
                 elif rec_unit == "b":
-                    new_due = base_date ## pass
+                    new_due = base_date ## pass(not implement yet...)
 
                 else:
                     new_due = base_date
-                
+
                 new_task.due_date = new_due
 
             new_task.rebuild_raw_todo()
             self.tasks.append(new_task)
+            cnt_create += 1
+        return cnt_create
+
+    def archive(self):
+        """archive finished tasks.
+
+            Returns: archive tasks count.
+        """
+        finished = [x for x in self.tasks if x.finished]
+        self.archives.extend(finished)
+        self.tasks = [x for x in self.tasks if not x.finished]
+        return len(finished)
