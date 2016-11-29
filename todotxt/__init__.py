@@ -362,7 +362,8 @@ class Tasks(object):
             text.
         """
 
-        return Tasks(self.path, filter(lambda x: x.matches(text), self.tasks))
+        return Tasks(self.path, self.archive_path,
+            filter(lambda x: x.matches(text), self.tasks))
 
     def order_by(self, criteria):
         """Sorts the tasks by given criteria and returns a new Tasks object
@@ -386,6 +387,7 @@ class Tasks(object):
 
         if criteria in criterias:
             return Tasks(self.path,
+                         self.archive_path,
                          sorted(self.tasks, key=attrgetter(criteria),
                                 cmp = lambda x, y: cmp(str(x), str(y)),
                                 reverse=reversed))
