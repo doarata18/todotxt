@@ -9,8 +9,6 @@ import re
 import codecs
 
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
-##CONTEXT_REGEX = "(@\\w+)"
-##PROJECT_REGEX = "(\\+\\w+)"
 CONTEXT_REGEX = "\s(@\\S+)"   # Unicode Contexts hit
 PROJECT_REGEX = "\s(\\+\\S+)" # Unicode Projects hit
 NO_PRIORITY_CHARACTER = "^"
@@ -65,6 +63,7 @@ def date_value(arg_date):
 
     return retval
 
+
 class Task(object):
 
     """A class that represents a task."""
@@ -87,6 +86,32 @@ class Task(object):
         self.raw_todo = raw_todo
 
         self.parse()
+
+    def __str__(self):
+        return "{0}: {1}".format(self.tid, self.raw_todo)
+
+    def __repr__(self):
+        return "<Task {0} '{1}'>".format(self.tid, self.raw_todo)
+
+    def __eq__(self, other):
+        ##return (self.raw_todo == other.raw_todo)
+        return (self.tid == other.tid \
+                and self.raw_todo == other.raw_todo \
+                and self.priority == other.priority \
+                and self.todo == other.todo \
+                and self.projects == other.projects \
+                and self.contexts == other.contexts \
+                and self.finished == other.finished \
+                and self.created_date == other.created_date \
+                and self.finished_date == other.finished_date \
+                and self.threshold_date == other.threshold_date \
+                and self.due_date == other.due_date \
+                and self.recursive == other.recursive
+               )
+
+    def __ne__(self, other):
+        ##return (self.raw_todo != other.raw_todo)
+        return not self.__eq__(other)
 
     def parse(self):
         """Parse the text of self.raw_todo and update internal state."""
@@ -127,8 +152,6 @@ class Task(object):
         # threshold date getting
         match = [x for x in splits if x.startswith(THRESHOLDDATE_SIG)]
         if len(match) != 0:
-            # keyword(today, mon, monday, +[0-9]+[dwmyb])解析入れるなら、ここ
-            # 日付書式エラー時の処理も必要
             self.threshold_date = \
                 date_value(match[0][len(THRESHOLDDATE_SIG):])
             # splitsから"t:"節を取り除く処理
@@ -139,8 +162,6 @@ class Task(object):
         # due-date getting
         match = [x for x in splits if x.startswith(DUEDATE_SIG)]
         if len(match) != 0:
-            # keyword(today, mon, monday, +[0-9]+[dwmyb])解析入れるなら、ここ
-            # 日付書式エラー時の処理も必要
             self.due_date = \
                 date_value(match[0][len(DUEDATE_SIG):])
             # splitsから"due:"節を取り除く処理
@@ -155,8 +176,6 @@ class Task(object):
             # splitsから"rec:"節を取り除く処理
             for i in match:
                 splits.remove(i)
-
-        ## self.todo = " ".join(splits)
 
         ## match = [x for x in splits if x[0] == "@"]
         match = re.findall(CONTEXT_REGEX, " ".join(splits))
@@ -234,18 +253,6 @@ class Task(object):
 
         return self.raw_todo
 
-    def __str__(self):
-        return "{0}: {1}".format(self.tid, self.raw_todo)
-
-    def __repr__(self):
-        return "<Task {0} '{1}'>".format(self.tid, self.raw_todo)
-
-    ## customize metods
-    def __eq__(self, other):
-        return True if self.raw_todo == other.raw_todo else False
-
-    def __ne__(self, other):
-        return True if self.raw_todo != other.raw_todo else False
 
 class Tasks(object):
 
@@ -264,6 +271,40 @@ class Tasks(object):
         self.path = path
         self.archive_path = archive_path
         self.tasks = tasks if tasks is not None else []
+
+    def __str__(self):
+        return str(self.tasks)
+
+    def __repr__(self):
+        return "<Tasks {0}>".format(self.__str__())
+
+    def __iter__(self):
+        return iter(self.tasks)
+
+    def __len__(self):
+        return len(self.tasks)
+
+    def __getitem__(self, key):
+        return self.tasks[key]
+
+    def __setitem__(self, key, value):
+        if isinstance(value, str):
+            self.tasks[key] = Task(value)
+        elif isinstance(value, Task):
+            self.tasks[key] = value
+
+    def __delitem__(self, key):
+        del self.tasks[key]
+
+    def _trigger_event(self, event):
+        """Triggers an event by calling handler functions assigned for it.
+
+        Args:
+            event -- the event to trigger"""
+
+        if event in self.handlers:
+            for handler in self.handlers[event]:
+                handler(self)
 
     def load(self, filename=None):
         """Loads tasks from given file, parses them into internal
@@ -363,16 +404,6 @@ class Tasks(object):
         self.tasks.append(Task(text, len(self.tasks)))
         return self
 
-    def _trigger_event(self, event):
-        """Triggers an event by calling handler functions assigned for it.
-
-        Args:
-            event -- the event to trigger"""
-
-        if event in self.handlers:
-            for handler in self.handlers[event]:
-                handler(self)
-
     def add_handler(self, event, handler):
         """Attach a handler function to an event.
 
@@ -385,31 +416,6 @@ class Tasks(object):
         else:
             self.handlers[event] = [handler]
 
-    def __str__(self):
-        return str(self.tasks)
-
-    def __repr__(self):
-        return "<Tasks {0}>".format(self.__str__())
-
-    ## customize methods
-    def __iter__(self):
-        return iter(self.tasks)
-
-    def __len__(self):
-        return len(self.tasks)
-
-    def __getitem__(self, key):
-        return self.tasks[key]
-
-    def __setitem__(self, key, value):
-        if isinstance(value, str):
-            self.tasks[key] = Task(value)
-        elif isinstance(value, Task):
-            self.tasks[key] = value
-
-    def __delitem__(self, key):
-        del self.tasks[key]
-
     def append(self, value="[dummy task]"):
         """Append to Tasks.tasks collection.
 
@@ -421,38 +427,15 @@ class Tasks(object):
         else:
             self.add(value)
 
-    def get_projects(self):
-        """Get projects in tasks collection."""
-        s = set()
-        for i in self.tasks:
-            for j in i.projects:
-                s.add(j)
-        return sorted(list(s))
+    def archive(self):
+        """archive finished tasks.
 
-    def get_contexts(self):
-        """Get contexts in tasks collection."""
-        s = set()
-        for i in self.tasks:
-            for j in i.contexts:
-                s.add(j)
-        return sorted(list(s))
-
-    def sort(self):
-        """Tasks order sort by tid."""
-        self.tasks = sorted(self.tasks, cmp = lambda x, y: cmp(x.tid, y.tid))
-
-    def renum(self, start=0, step=1):
-        """Renumber tasks tids."""
-        gen_tid = \
-            (x for x in range(start, len(self.tasks) * step + start, step))
-        self.sort()
-        for i in self.tasks:
-            i.tid = gen_tid.next()
-
-    def reload(self):
-        """Crear TasksList and Loads tasks from given file."""
-        self.tasks = []
-        self.load()
+            Returns: archive tasks list.
+        """
+        finished = [x for x in self.tasks if x.finished]
+        self.archives.extend(finished)
+        self.tasks = [x for x in self.tasks if not x.finished]
+        return finished
 
     def create_recursive_tasks(self):
         """Create recursicve tasks from finished tasks.
@@ -524,12 +507,35 @@ class Tasks(object):
             cnt_create += 1
         return cnt_create
 
-    def archive(self):
-        """archive finished tasks.
+    def get_projects(self):
+        """Get projects in tasks collection."""
+        s = set()
+        for i in self.tasks:
+            for j in i.projects:
+                s.add(j)
+        return sorted(list(s))
 
-            Returns: archive tasks count.
-        """
-        finished = [x for x in self.tasks if x.finished]
-        self.archives.extend(finished)
-        self.tasks = [x for x in self.tasks if not x.finished]
-        return len(finished)
+    def get_contexts(self):
+        """Get contexts in tasks collection."""
+        s = set()
+        for i in self.tasks:
+            for j in i.contexts:
+                s.add(j)
+        return sorted(list(s))
+
+    def sort(self):
+        """Tasks order sort by tid."""
+        self.tasks = sorted(self.tasks, cmp = lambda x, y: cmp(x.tid, y.tid))
+
+    def renum(self, start=0, step=1):
+        """Renumber tasks tids."""
+        gen_tid = \
+            (x for x in range(start, len(self.tasks) * step + start, step))
+        self.sort()
+        for i in self.tasks:
+            i.tid = gen_tid.next()
+
+    def reload(self):
+        """Crear TasksList and Loads tasks from given file."""
+        self.tasks = []
+        self.load()
