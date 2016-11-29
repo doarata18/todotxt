@@ -442,11 +442,11 @@ class Tasks(object):
             rec syntax: \"rec:\"\+*[0-9]+[dwmyb]
             \"b\" not implement yet...
 
-            Returns: create tasks count.
+            Returns: create tasks list.
         """
         END_OF_MONTH = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
                         7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
-        cnt_create = 0
+        createlist = []
         for i in [x for x in self.tasks if x.finished and x.recursive != None]:
             new_task = Task(i.raw_todo)
             new_task.finished = False
@@ -504,8 +504,8 @@ class Tasks(object):
 
             new_task.rebuild_raw_todo()
             self.tasks.append(new_task)
-            cnt_create += 1
-        return cnt_create
+            createlist.append(new_task)
+        return createlist
 
     def get_projects(self):
         """Get projects in tasks collection."""
