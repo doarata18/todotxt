@@ -111,20 +111,20 @@ class Task(object):
         return "<Task {0} '{1}'>".format(self.tid, self.raw_todo)
 
     def __eq__(self, other):
-        ##return (self.raw_todo == other.raw_todo)
-        return (self.tid == other.tid \
-                and self.raw_todo == other.raw_todo \
-                and self.priority == other.priority \
-                and self.todo == other.todo \
-                and self.projects == other.projects \
-                and self.contexts == other.contexts \
-                and self.finished == other.finished \
-                and self.created_date == other.created_date \
-                and self.finished_date == other.finished_date \
-                and self.threshold_date == other.threshold_date \
-                and self.due_date == other.due_date \
-                and self.recursive == other.recursive
-               )
+        return (self.raw_todo == other.raw_todo)
+        ## return (self.tid == other.tid \
+        ##         and self.raw_todo == other.raw_todo \
+        ##         and self.priority == other.priority \
+        ##         and self.todo == other.todo \
+        ##         and self.projects == other.projects \
+        ##         and self.contexts == other.contexts \
+        ##         and self.finished == other.finished \
+        ##         and self.created_date == other.created_date \
+        ##         and self.finished_date == other.finished_date \
+        ##         and self.threshold_date == other.threshold_date \
+        ##         and self.due_date == other.due_date \
+        ##         and self.recursive == other.recursive
+        ##        )
 
     def __ne__(self, other):
         ##return (self.raw_todo != other.raw_todo)
