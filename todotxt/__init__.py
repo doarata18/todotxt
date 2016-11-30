@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """The main endpoint for todotxt."""
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, date, timedelta
 from operator import attrgetter
 from copy import deepcopy
 import re
@@ -41,7 +40,7 @@ def date_value(arg_date):
     KEYWORDS = {"today":0, "tomorrow":1, "yesterday":-1}
 
     retval = None
-    if type(arg_date) in type.mro(datetime): # datetime型, date型, (object型)
+    if isinstance(arg_date, date): # datetime型, date型
         arg_date = arg_date.strftime("%Y-%m-%d")
     else:
         arg_date = arg_date.replace("/", "-")
@@ -288,6 +287,7 @@ class Tasks(object):
         self.path = path
         self.archive_path = archive_path
         self.tasks = tasks if tasks is not None else []
+        self.archives = []
 
     def __str__(self):
         return str(self.tasks)
@@ -452,7 +452,7 @@ class Tasks(object):
             Returns: archive tasks list.
         """
         finished = [x for x in self.tasks if x.finished]
-        self.archives.extend(finished)
+        self.archives = self.archives + finished
         self.tasks = [x for x in self.tasks if not x.finished]
         return finished
 
