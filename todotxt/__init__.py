@@ -63,6 +63,23 @@ def date_value(arg_date):
 
     return retval
 
+def bizdate_add(start=datetime.today(), addcnt = 1):
+    """add date in business date.
+        Args:
+            start(=datetime, default:today()): base date.
+            addcnt(>=0, default:1): number of add days.
+
+        Returns:
+            added datetime
+    """
+    retv = start
+    for i in xrange(addcnt):
+        retv += timedelta(days=1)
+        while retv.weekday() >= 5:  # sat～sun
+            retv += timedelta(days=1)
+    return retv
+
+
 
 class Task(object):
 
@@ -442,7 +459,7 @@ class Tasks(object):
     def create_recursive_tasks(self):
         """Create recursicve tasks from finished tasks.
             rec syntax: \"rec:\"\+*[0-9]+[dwmyb]
-            \"b\" not implement yet...
+            \"b\" : business date
 
             Returns: create tasks list.
         """
@@ -497,7 +514,7 @@ class Tasks(object):
                                            base_date.day)
 
                 elif rec_unit == "b":
-                    new_due = base_date ## pass(not implement yet...)
+                    new_due = bizdate_add(base_date, rec_span)
 
                 else:
                     new_due = base_date

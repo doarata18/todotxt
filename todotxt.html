@@ -154,7 +154,7 @@ Returns:&nbsp;archive&nbsp;tasks&nbsp;list.</tt></dd></dl>
 
 <dl><dt><a name="Tasks-create_recursive_tasks"><strong>create_recursive_tasks</strong></a>(self)</dt><dd><tt>Create&nbsp;recursicve&nbsp;tasks&nbsp;from&nbsp;finished&nbsp;tasks.<br>
 rec&nbsp;syntax:&nbsp;"rec:"\+*[0-9]+[dwmyb]<br>
-"b"&nbsp;not&nbsp;implement&nbsp;yet...<br>
+"b"&nbsp;:&nbsp;business&nbsp;date<br>
 &nbsp;<br>
 Returns:&nbsp;create&nbsp;tasks&nbsp;list.</tt></dd></dl>
 
@@ -227,7 +227,14 @@ Data and other attributes defined here:<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-date_value"><strong>date_value</strong></a>(arg_date)</dt><dd><tt>Expand&nbsp;Date&nbsp;Value.<br>
+<td width="100%"><dl><dt><a name="-bizdate_add"><strong>bizdate_add</strong></a>(start<font color="#909090">=datetime.datetime(2016, 11, 30, 14, 38, 46, 129000)</font>, addcnt<font color="#909090">=1</font>)</dt><dd><tt>add&nbsp;date&nbsp;in&nbsp;business&nbsp;date.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;start(=datetime,&nbsp;default:today()):&nbsp;base&nbsp;date.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;addcnt(&gt;=0,&nbsp;default:1):&nbsp;number&nbsp;of&nbsp;add&nbsp;days.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;added&nbsp;datetime</tt></dd></dl>
+ <dl><dt><a name="-date_value"><strong>date_value</strong></a>(arg_date)</dt><dd><tt>Expand&nbsp;Date&nbsp;Value.<br>
 In&nbsp;due_date(due:)&nbsp;and&nbsp;threshold_date(t:),&nbsp;specify&nbsp;some&nbsp;keywords&nbsp;available.<br>
 &nbsp;&nbsp;-&nbsp;YYYY-MM-DD,&nbsp;YYYY/MM/DD<br>
 &nbsp;&nbsp;-&nbsp;mon,&nbsp;tue,&nbsp;wed,&nbsp;thu,&nbsp;fri,&nbsp;sat,&nbsp;sun<br>
