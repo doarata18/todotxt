@@ -559,4 +559,5 @@ class Tasks(object):
     def reload(self):
         """Crear TasksList and Loads tasks from given file."""
         self.tasks = []
+        self.archives = []
         self.load()
