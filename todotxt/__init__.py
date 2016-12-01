@@ -20,6 +20,8 @@ DUEDATE_SIG = "due:"
 THRESHOLDDATE_SIG = "t:"
 RECURSIVE_SIG = "rec:"
 
+HOLIDAY_TBL = []    # "YYYY-MM-DD" format
+
 def date_value(arg_date):
     """
     Expand Date Value.
@@ -74,10 +76,10 @@ def bizdate_add(start=datetime.today(), addcnt = 1):
     retv = start
     for i in xrange(addcnt):
         retv += timedelta(days=1)
-        while retv.weekday() >= 5:  # sat～sun
+        while retv.weekday() >= 5 \
+              or retv.strftime("%Y-%m-%d") in HOLIDAY_TBL:  # sat～sun, holiday
             retv += timedelta(days=1)
     return retv
-
 
 
 class Task(object):
