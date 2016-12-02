@@ -256,7 +256,7 @@ class Task(object):
         recursive = RECURSIVE_SIG + self.recursive if \
             self.recursive is not None else ""
 
-        self.raw_todo = "{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}" \
+        self.raw_todo = u"{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}" \
             .format(finished,
                     finished_date if self.finished else "",
                     priority,
