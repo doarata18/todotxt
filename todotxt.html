@@ -173,7 +173,12 @@ Returns:<br>
 <dl><dt><a name="Tasks-get_projects"><strong>get_projects</strong></a>(self)</dt><dd><tt>Get&nbsp;projects&nbsp;in&nbsp;tasks&nbsp;collection.</tt></dd></dl>
 
 <dl><dt><a name="Tasks-load"><strong>load</strong></a>(self, filename<font color="#909090">=None</font>)</dt><dd><tt>Loads&nbsp;tasks&nbsp;from&nbsp;given&nbsp;file,&nbsp;parses&nbsp;them&nbsp;into&nbsp;internal<br>
-representation&nbsp;and&nbsp;stores&nbsp;them&nbsp;in&nbsp;this&nbsp;manager's&nbsp;<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+representation&nbsp;and&nbsp;stores&nbsp;them&nbsp;in&nbsp;this&nbsp;manager's&nbsp;<a href="__builtin__.html#object">object</a>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;:&nbsp;load-filename,&nbsp;default&nbsp;:&nbsp;self.<strong>path</strong><br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;load&nbsp;success&nbsp;-&nbsp;True&nbsp;/&nbsp;load&nbsp;cancel&nbsp;-&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="Tasks-order_by"><strong>order_by</strong></a>(self, criteria)</dt><dd><tt>Sorts&nbsp;the&nbsp;tasks&nbsp;by&nbsp;given&nbsp;criteria&nbsp;and&nbsp;returns&nbsp;a&nbsp;new&nbsp;<a href="#Tasks">Tasks</a>&nbsp;<a href="__builtin__.html#object">object</a><br>
 with&nbsp;the&nbsp;new&nbsp;ordering.&nbsp;The&nbsp;criteria&nbsp;argument&nbsp;can&nbsp;have&nbsp;the&nbsp;following<br>
@@ -196,7 +201,10 @@ default&nbsp;path&nbsp;(self.<strong>path</strong>)&nbsp;will&nbsp;be&nbsp;used.
 &nbsp;<br>
 Args:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;--&nbsp;An&nbsp;optional&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;save&nbsp;the&nbsp;tasklist&nbsp;into.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;archive_file&nbsp;--&nbsp;An&nbsp;optional&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;save&nbsp;the&nbsp;archived.</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;archive_file&nbsp;--&nbsp;An&nbsp;optional&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;save&nbsp;the&nbsp;archived.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;save&nbsp;success&nbsp;-&nbsp;True&nbsp;/&nbsp;save&nbsp;cancel&nbsp;-&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="Tasks-sort"><strong>sort</strong></a>(self)</dt><dd><tt><a href="#Tasks">Tasks</a>&nbsp;order&nbsp;sort&nbsp;by&nbsp;tid.</tt></dd></dl>
 

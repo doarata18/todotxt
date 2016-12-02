@@ -332,8 +332,15 @@ class Tasks(object):
 
     def load(self, filename=None):
         """Loads tasks from given file, parses them into internal
-        representation and stores them in this manager's object."""
+        representation and stores them in this manager's object.
+            Args:
+                filename : load-filename, default : self.path
 
+            Returns:
+                load success - True / load cancel - False
+        """
+
+        retval = False
         self._trigger_event("load")
 
         filename = self.path if filename is None else filename
@@ -346,6 +353,8 @@ class Tasks(object):
                     i += 1
 
             self._trigger_event("loaded")
+            retval = True
+        return retval
 
     def save(self, filename=None, archive_file=None):
         """Saves tasks that are saved in this manager. If specified they will
@@ -355,8 +364,12 @@ class Tasks(object):
         Args:
             filename -- An optional name of the file to save the tasklist into.
             archive_file -- An optional name of the file to save the archived.
+
+        Returns:
+            save success - True / save cancel - False
         """
 
+        retval = False
         self._trigger_event("save")
 
         filename = self.path if filename is None else filename
@@ -376,6 +389,8 @@ class Tasks(object):
                 self.archives = []
 
             self._trigger_event("saved")
+            retval = True
+        return retval
 
     def filter_by(self, text):
         """Filteres the tasks by a given filter text. Returns a new Tasks
@@ -583,4 +598,4 @@ class Tasks(object):
         """Crear TasksList/ArchiveList and Loads tasks from given file."""
         self.tasks = []
         self.archives = []
-        self.load(filename)
+        return self.load()
