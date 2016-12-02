@@ -3,7 +3,6 @@
 
 from datetime import datetime, date, timedelta
 from operator import attrgetter
-from copy import deepcopy
 import re
 import codecs
 
@@ -64,7 +63,7 @@ def date_value(arg_date):
 
     return retval
 
-def bizdate_add(start=datetime.today(), addcnt = 1):
+def bizdate_add(start=None, addcnt = 1):
     """add date in business date.
         Args:
             start(=datetime, default:today()): base date.
@@ -72,7 +71,13 @@ def bizdate_add(start=datetime.today(), addcnt = 1):
 
         Returns:
             added datetime
+
+        HOLIDAY_TBL<list> - \"YYYY-MM-DD\" format str list, deal holiday.
+            default []
     """
+    if start == None:
+        start = datetime(*datetime.today().timetuple()[:3])
+
     retv = start
     for i in xrange(addcnt):
         retv += timedelta(days=1)
@@ -277,7 +282,7 @@ class Tasks(object):
     """Task manager that handles loading, saving and filtering tasks."""
 
     # the location of the todo.txt file
-    path = ""
+    path = None
     archive_path = None
     tasks = []
     archives = []
@@ -331,15 +336,16 @@ class Tasks(object):
 
         self._trigger_event("load")
 
-        if filename is None:
-            filename = self.path
-        with codecs.open(filename, "r", "utf-8") as f:
-            i = 0
-            for line in f:
-                self.tasks.append(Task(line.strip(), i))
-                i += 1
+        filename = self.path if filename is None else filename
 
-        self._trigger_event("loaded")
+        if filename:    # self.path set.
+            with codecs.open(filename, "r", "utf-8") as f:
+                i = len(self.tasks)
+                for line in f:
+                    self.tasks.append(Task(line.strip(), i))
+                    i += 1
+
+            self._trigger_event("loaded")
 
     def save(self, filename=None, archive_file=None):
         """Saves tasks that are saved in this manager. If specified they will
@@ -353,21 +359,23 @@ class Tasks(object):
 
         self._trigger_event("save")
 
-        if filename is None:
-            filename = self.path
-        with codecs.open(filename, "w", "utf-8") as f:
-            for task in self.tasks:
-                f.write("{0}\n".format(task.rebuild_raw_todo()))
+        filename = self.path if filename is None else filename
 
-        if archive_file is None:
-            archive_file = self.archive_path
-        if archive_file is not None and len(self.archives) > 0:
-            with codecs.open(archive_file, "a", "utf-8") as f:
-                for arch in self.archives:
-                    f.write("{0}\n".format(arch.rebuild_raw_todo()))
-            self.archives = []
+        if filename:    # self.path set.
+            with codecs.open(filename, "w", "utf-8") as f:
+                for task in self.tasks:
+                    f.write("{0}\n".format(task.rebuild_raw_todo()))
 
-        self._trigger_event("saved")
+            archive_file = self.archive_path \
+                if archive_file is None else archive_file
+
+            if archive_file is not None and len(self.archives) > 0:
+                with codecs.open(archive_file, "a", "utf-8") as f:
+                    for arch in self.archives:
+                        f.write("{0}\n".format(arch.rebuild_raw_todo()))
+                self.archives = []
+
+            self._trigger_event("saved")
 
     def filter_by(self, text):
         """Filteres the tasks by a given filter text. Returns a new Tasks
@@ -422,7 +430,7 @@ class Tasks(object):
         Returns:
             A new :class:`Tasks` object that contains the newly created task"""
 
-        self.tasks.append(Task(text, len(self.tasks)))
+        self.tasks.append(Task(unicode(text), len(self.tasks)))
         return self
 
     def add_handler(self, event, handler):
@@ -441,12 +449,27 @@ class Tasks(object):
         """Append to Tasks.tasks collection.
 
         Args:
-            value(='[dummy task]'): text or Task object(=deepcopy(obj))
+            value(='[dummy task]'): text/Task/Tasks/list<text/Task/Tasks>)
         """
         if isinstance(value, Task):
-            self.tasks.append(deepcopy(value))
-        else:
+            self.tasks.append(value)
+
+        elif isinstance(value, str) or isinstance(value, unicode):
             self.add(value)
+
+        elif isinstance(value, Tasks):
+            self.tasks.extend(value.tasks)
+
+        elif isinstance(value, list):
+            for i in value:
+                if isinstance(i, Task):
+                    self.tasks.append(i)
+
+                elif isinstance(i, str) or isinstance(i, unicode):
+                    self.add(unicode(i))
+
+                elif isinstance(i, Tasks):
+                    self.tasks.extend(i.tasks)
 
     def archive(self):
         """archive finished tasks.
@@ -557,7 +580,7 @@ class Tasks(object):
             i.tid = gen_tid.next()
 
     def reload(self):
-        """Crear TasksList and Loads tasks from given file."""
+        """Crear TasksList/ArchiveList and Loads tasks from given file."""
         self.tasks = []
         self.archives = []
-        self.load()
+        self.load(filename)
