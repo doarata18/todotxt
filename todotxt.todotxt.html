@@ -1,25 +1,26 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><title>Python: package todotxt</title>
+<html><head><title>Python: module todotxt.todotxt</title>
 <meta charset="utf-8">
 </head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>todotxt</strong></big></big></font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="todotxt.html"><font color="#ffffff">todotxt</font></a>.todotxt</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///R:/tdc/todotxt/__init__.py">r:\tdc\todotxt\__init__.py</a></font></td></tr></table>
-    <p><tt>todo.txt&nbsp;processor&nbsp;class&nbsp;module.</tt></p>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:///R:/tdc/todotxt/todotxt.py">r:\tdc\todotxt\todotxt.py</a></font></td></tr></table>
+    <p><tt>The&nbsp;main&nbsp;endpoint&nbsp;for&nbsp;todotxt.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="todotxt.todotxt.html">todotxt</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="codecs.html">codecs</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -30,8 +31,8 @@
 <dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
 </font></dt><dd>
 <dl>
-<dt><font face="helvetica, arial"><a href="todotxt.todotxt.html#Task">todotxt.todotxt.Task</a>
-</font></dt><dt><font face="helvetica, arial"><a href="todotxt.todotxt.html#Tasks">todotxt.todotxt.Tasks</a>
+<dt><font face="helvetica, arial"><a href="todotxt.todotxt.html#Task">Task</a>
+</font></dt><dt><font face="helvetica, arial"><a href="todotxt.todotxt.html#Tasks">Tasks</a>
 </font></dt></dl>
 </dd>
 </dl>
@@ -234,11 +235,48 @@ Data and other attributes defined here:<br>
 
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-bizdate_add"><strong>bizdate_add</strong></a>(start<font color="#909090">=None</font>, addcnt<font color="#909090">=1</font>)</dt><dd><tt>add&nbsp;date&nbsp;in&nbsp;business&nbsp;date.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;start(=datetime,&nbsp;default:today()):&nbsp;base&nbsp;date.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;addcnt(&gt;=0,&nbsp;default:1):&nbsp;number&nbsp;of&nbsp;add&nbsp;days.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;added&nbsp;datetime&nbsp;(skip&nbsp;sat,&nbsp;sun&nbsp;and&nbsp;holiday)<br>
+&nbsp;<br>
+HOLIDAY_TBL&lt;list&gt;&nbsp;-&nbsp;"YYYY-MM-DD"&nbsp;formated&nbsp;str&nbsp;list,&nbsp;deal&nbsp;holiday.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;[]</tt></dd></dl>
+ <dl><dt><a name="-date_value"><strong>date_value</strong></a>(arg_date)</dt><dd><tt>Expand&nbsp;Date&nbsp;Value.<br>
+In&nbsp;due_date(due:)&nbsp;and&nbsp;threshold_date(t:),&nbsp;specify&nbsp;some&nbsp;keywords&nbsp;available.<br>
+&nbsp;&nbsp;-&nbsp;YYYY-MM-DD,&nbsp;YYYY/MM/DD<br>
+&nbsp;&nbsp;-&nbsp;mon,&nbsp;tue,&nbsp;wed,&nbsp;thu,&nbsp;fri,&nbsp;sat,&nbsp;sun<br>
+&nbsp;&nbsp;-&nbsp;monday,&nbsp;tuesday,&nbsp;wednesday,&nbsp;thursday,&nbsp;friday,&nbsp;saturday,&nbsp;sunday<br>
+&nbsp;&nbsp;-&nbsp;today,&nbsp;tommorow,&nbsp;yesterday<br>
+&nbsp;<br>
+&nbsp;&nbsp;Args:&nbsp;arg_date&nbsp;/&nbsp;str&nbsp;or&nbsp;datetime.datetime&nbsp;or&nbsp;datetime.date<br>
+&nbsp;<br>
+&nbsp;&nbsp;Returns:&nbsp;datetime.datetime</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>HOLIDAY_TBL</strong> = []<br>
-<strong>__all__</strong> = ['Tasks', 'Task', 'HOLIDAY_TBL']</td></tr></table>
+<td width="100%"><strong>CONTEXT_REGEX</strong> = r'\s(@\S+)'<br>
+<strong>DATE_REGEX</strong> = r'([\d]{4})-([\d]{2})-([\d]{2})'<br>
+<strong>DUEDATE_REGEX</strong> = r'due\:(\S+)'<br>
+<strong>DUEDATE_SIG</strong> = 'due:'<br>
+<strong>HOLIDAY_TBL</strong> = []<br>
+<strong>NO_PRIORITY_CHARACTER</strong> = '^'<br>
+<strong>PROJECT_REGEX</strong> = r'\s(\+\S+)'<br>
+<strong>RECURSIVE_REGEX</strong> = r'rec\:(\S+)'<br>
+<strong>RECURSIVE_SIG</strong> = 'rec:'<br>
+<strong>REC_SYNTAX_REGEX</strong> = r'(\+*)([0-9]+)([dwmyb])'<br>
+<strong>THRESHOLDDATE_REGEX</strong> = r't\:(\S+)'<br>
+<strong>THRESHOLDDATE_SIG</strong> = 't:'</td></tr></table>
 </body></html>
