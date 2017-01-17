@@ -79,10 +79,9 @@ def bizdate_add(start=None, addcnt = 1):
         start = datetime(*datetime.today().timetuple()[:3])
 
     retv = start
-    for i in xrange(addcnt):
+    for i in range(addcnt):
         retv += timedelta(days=1)
-        while retv.weekday() >= 5 \
-              or retv.strftime("%Y-%m-%d") in HOLIDAY_TBL:  # sat～sun, holiday
+        while retv.weekday() >= 5 or (retv.strftime("%Y-%m-%d") in HOLIDAY_TBL):  # sat～sun, holiday
             retv += timedelta(days=1)
     return retv
 
@@ -431,7 +430,6 @@ class Tasks(object):
             return Tasks(self.path,
                          self.archive_path,
                          sorted(self.tasks, key=attrgetter(criteria),
-                                cmp = lambda x, y: cmp(str(x), str(y)),
                                 reverse=reversed))
         else:
             return self
@@ -445,7 +443,7 @@ class Tasks(object):
         Returns:
             A new :class:`Tasks` object that contains the newly created task"""
 
-        self.tasks.append(Task(unicode(text), len(self.tasks)))
+        self.tasks.append(Task(text, len(self.tasks)))
         return self
 
     def add_handler(self, event, handler):
@@ -469,7 +467,7 @@ class Tasks(object):
         if isinstance(value, Task):
             self.tasks.append(value)
 
-        elif isinstance(value, str) or isinstance(value, unicode):
+        elif isinstance(value, str):
             self.add(value)
 
         elif isinstance(value, Tasks):
@@ -480,8 +478,8 @@ class Tasks(object):
                 if isinstance(i, Task):
                     self.tasks.append(i)
 
-                elif isinstance(i, str) or isinstance(i, unicode):
-                    self.add(unicode(i))
+                elif isinstance(i, str):
+                    self.add(i)
 
                 elif isinstance(i, Tasks):
                     self.tasks.extend(i.tasks)
@@ -587,7 +585,7 @@ class Tasks(object):
 
     def sort(self):
         """Tasks order sort by tid."""
-        self.tasks = sorted(self.tasks, cmp = lambda x, y: cmp(x.tid, y.tid))
+        self.tasks = sorted(self.tasks, key=attrgetter("tid"))
 
     def renum(self, start=0, step=1):
         """Renumber tasks tids."""
@@ -595,10 +593,11 @@ class Tasks(object):
             (x for x in range(start, len(self.tasks) * step + start, step))
         self.sort()
         for i in self.tasks:
-            i.tid = gen_tid.next()
+            i.tid = next(gen_tid)
 
     def reload(self):
         """Crear TasksList/ArchiveList and Loads tasks from given file."""
         self.tasks = []
         self.archives = []
         return self.load()
+
