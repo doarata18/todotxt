@@ -29,7 +29,7 @@ for i in [x for x in tasks if x.recursive and x.finished]:
 
 modify_flag = False
 if cnt > 0:
-    ans = raw_input("Create Recursive tasks?[y/N] :")
+    ans = input("Create Recursive tasks?[y/N] :")
     if ans[0].lower() == "y":
         print("Create recursive tasks...")
         tasks.create_recursive_tasks()
@@ -40,7 +40,7 @@ else:
     print("There is no tasks need create recursive.\n")
 
 if len([x for x in tasks if x.finished]) > 0:
-    ans = raw_input("Archive done tasks?[y/N] :")
+    ans = input("Archive done tasks?[y/N] :")
     if ans[0].lower() == "y":
         print("Archive done.txt...")
         tasks.archive()
@@ -53,7 +53,7 @@ if len([x for x in tasks if x.finished]) > 0:
 
 
 if modify_flag:
-    ans = raw_input("Save?[y/N] :")
+    ans = input("Save?[y/N] :")
     if ans[0].lower() == "y":
         print("Saving files...")
         tasks.save()
