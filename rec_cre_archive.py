@@ -4,13 +4,21 @@
 #   rec:に対応していないのと、archiveがうまく動かないっぽいので。。。
 from __future__ import print_function
 import todotxt
-import os
+import os, sys
 
-filename = u"C:\\Users\\localadmin\\Dropbox\\アプリ" \
-           + u"\\Simpletask App Folder\\todo.txt"
+if len(sys.argv) > 1:
+    filename = sys.argv[1]
+    if len(sys.argv) > 2:
+        archivef = sys.argv[2]
+    else:
+        archivef = os.path.dirname(filename) + "done.txt"
 
-archivef = u"C:\\Users\\localadmin\\Dropbox\\アプリ" \
-           + u"\\Simpletask App Folder\\done.txt"
+else:
+    filename = u"C:\\Users\\localadmin\\Dropbox\\アプリ" \
+               + u"\\Simpletask App Folder\\todo.txt"
+
+    archivef = u"C:\\Users\\localadmin\\Dropbox\\アプリ" \
+               + u"\\Simpletask App Folder\\done.txt"
 
 ##filename = ("ttt.txt")
 
@@ -50,6 +58,9 @@ if len([x for x in tasks if x.finished]) > 0:
     else:
         print("Archive skipped...\n")
         tasks.archive_path = None
+else:
+    print("There is no finished tasks.\n")
+
 
 
 if modify_flag:
@@ -60,7 +71,8 @@ if modify_flag:
         print("done...\n")
     else:
         print("Saving skipped...\n")
-
+else:
+    print("No need to save file.")
 
 print("\nToral Warning tasks: {0}".format(cnt))
 print("Done.")
