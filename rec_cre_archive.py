@@ -32,7 +32,7 @@ tasks.load()
 cnt = 0
 for i in [x for x in tasks if x.recursive and x.finished]:
     if len([y for y in tasks if not y.finished and y.todo == i.todo]) == 0:
-        print("[Wrn]:{0}".format(i.raw_todo))
+        print("[Rec]:{0}".format(i.raw_todo))
         cnt += 1
 
 modify_flag = False
@@ -45,9 +45,14 @@ if cnt > 0:
         modify_flag = True
 
 else:
-    print("There is no tasks need create recursive.\n")
+    print("There is no task need create recursive.\n")
 
-if len([x for x in tasks if x.finished]) > 0:
+cnt = 0
+for i in [x for x in tasks if x.finished]:
+    print("[Done]:{0}".format(i.raw_todo))
+    cnt += 1
+
+if cnt > 0:
     ans = input("Archive done tasks?[y/N] :")
     if ans[0].lower() == "y":
         print("Archive done.txt...")
@@ -59,9 +64,7 @@ if len([x for x in tasks if x.finished]) > 0:
         print("Archive skipped...\n")
         tasks.archive_path = None
 else:
-    print("There is no finished tasks.\n")
-
-
+    print("There is no finished task.\n")
 
 if modify_flag:
     ans = input("Save?[y/N] :")
@@ -72,8 +75,7 @@ if modify_flag:
     else:
         print("Saving skipped...\n")
 else:
-    print("No need to save file.")
+    print("No need to save file.\n")
 
-print("\nToral Warning tasks: {0}".format(cnt))
 print("Done.")
 os.system("pause")
