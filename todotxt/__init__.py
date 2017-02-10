@@ -7,8 +7,8 @@ import re
 import codecs
 
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
-CONTEXT_REGEX = "\\s(@\\S+)"   # Unicode Contexts hit
-PROJECT_REGEX = "\\s(\\+\\S+)" # Unicode Projects hit
+CONTEXT_REGEX = "\\s(@\\S+)"    # Unicode Contexts hit
+PROJECT_REGEX = "\\s(\\+\\S+)"  # Unicode Projects hit
 NO_PRIORITY_CHARACTER = "^"
 DUEDATE_REGEX = "due\\:(\\S+)"
 THRESHOLDDATE_REGEX = "t\\:(\\S+)"
@@ -20,6 +20,7 @@ THRESHOLDDATE_SIG = "t:"
 RECURSIVE_SIG = "rec:"
 
 HOLIDAY_TBL = []    # type: List[str]  ##list of "YYYY-MM-DD" formated string
+
 
 def date_value(arg_date):
     """
@@ -34,19 +35,19 @@ def date_value(arg_date):
 
       Returns: datetime.datetime
     """
-    _weekdays = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
-                 "monday":0, "tuesday":1, "wednesday":2, "thursday":3,
-                 "friday":4, "saturday":5, "sunday":6}
+    _weekdays = {"mon": 0, "tue": 1, "wed": 2, "thu": 3, "fri": 4, "sat": 5,
+                 "sun": 6, "monday": 0, "tuesday": 1, "wednesday": 2,
+                 "thursday": 3, "friday": 4, "saturday": 5, "sunday": 6}
 
-    _keywords = {"today":0, "tomorrow":1, "yesterday":-1}
+    _keywords = {"today": 0, "tomorrow": 1, "yesterday": -1}
 
     retval = None
-    if isinstance(arg_date, date): # datetime型, date型
+    if isinstance(arg_date, date):  # datetime型, date型
         arg_date = arg_date.strftime("%Y-%m-%d")
     else:
         arg_date = arg_date.replace("/", "-")
 
-    match = re.search(DATE_REGEX, arg_date) # ISO-Format Date
+    match = re.search(DATE_REGEX, arg_date)     # ISO-Format Date
     if match is not None:
         retval = datetime.strptime(match.group(0), "%Y-%m-%d")
 
@@ -62,6 +63,7 @@ def date_value(arg_date):
                  + timedelta(days=_keywords[arg_date])
 
     return retval
+
 
 def bizdate_add(start=None, addcnt=1):
     """add date in business date.
@@ -81,7 +83,9 @@ def bizdate_add(start=None, addcnt=1):
     retv = start
     for i in range(addcnt):
         retv += timedelta(days=1)
-        while retv.weekday() >= 5 or (retv.strftime("%Y-%m-%d") in HOLIDAY_TBL):  # sat～sun, holiday
+        while retv.weekday() >= 5 \
+            or (retv.strftime("%Y-%m-%d") in HOLIDAY_TBL):
+            # sat～sun, holiday
             retv += timedelta(days=1)
     return retv
 
@@ -114,22 +118,8 @@ class Task(object):
 
     def __eq__(self, other):
         return self.raw_todo == other.raw_todo
-        ## return (self.tid == other.tid \
-        ##         and self.raw_todo == other.raw_todo \
-        ##         and self.priority == other.priority \
-        ##         and self.todo == other.todo \
-        ##         and self.projects == other.projects \
-        ##         and self.contexts == other.contexts \
-        ##         and self.finished == other.finished \
-        ##         and self.created_date == other.created_date \
-        ##         and self.finished_date == other.finished_date \
-        ##         and self.threshold_date == other.threshold_date \
-        ##         and self.due_date == other.due_date \
-        ##         and self.recursive == other.recursive
-        ##        )
 
     def __ne__(self, other):
-        ##return (self.raw_todo != other.raw_todo)
         return not self.__eq__(other)
 
     def parse(self):
@@ -196,7 +186,7 @@ class Task(object):
             for i in match:
                 splits.remove(i)
 
-        ## match = [x for x in splits if x[0] == "@"]
+        # match = [x for x in splits if x[0] == "@"]
         match = re.findall(CONTEXT_REGEX, " ".join(splits))
         if len(match) != 0:
             self.contexts = match
@@ -204,7 +194,7 @@ class Task(object):
         for i in [x for x in splits if x.startswith("@")]:
             splits.remove(i)
 
-        ## match = [x for x in splits if x[0] == "+"]
+        # match = [x for x in splits if x[0] == "+"]
         match = re.findall(PROJECT_REGEX, " ".join(splits))
         if len(match) != 0:
             self.projects = match
@@ -214,7 +204,7 @@ class Task(object):
 
         self.todo = " ".join(splits).strip()
 
-        if rebuild_flg: # date_value()を呼び出しで日付自動展開した可能性がある
+        if rebuild_flg:  # date_value()を呼び出しで日付自動展開した可能性がある
             self.rebuild_raw_todo()
 
     def matches(self, text):
@@ -267,8 +257,7 @@ class Task(object):
                     (" " + " ".join(self.contexts)) if self.contexts else "",
                     (" " + threshold) if threshold else "",
                     (" " + due) if due else "",
-                    (" " + recursive) if recursive else "" \
-                   ).strip()
+                    (" " + recursive) if recursive else "").strip()
 
         return self.raw_todo
 
@@ -501,16 +490,17 @@ class Tasks(object):
 
             Returns: create tasks list.
         """
-        _end_of_month = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
-                         7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+        _end_of_month = {1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30,
+                         7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31}
         createlist = []
-        for i in [x for x in self.tasks if x.finished and x.recursive != None]:
+        for i in [x for x in self.tasks if
+                  x.finished and x.recursive is not None]:
             new_task = Task(i.raw_todo)
             new_task.finished = False
             new_task.finished_date = None
             new_task.threshold_date = None
 
-            if i.due_date != None:
+            if i.due_date is not None:
                 match = re.search(REC_SYNTAX_REGEX, i.recursive)
                 rec_base = match.group(1)
                 rec_span = int(match.group(2))
@@ -519,8 +509,9 @@ class Tasks(object):
                 if rec_base == "+":
                     base_date = i.due_date
                 else:
-                    base_date = i.finished_date if i.finished_date != None \
-                        else datetime(*datetime.today().timetuple()[:3])
+                    base_date = i.finished_date if \
+                                    i.finished_date is not None else \
+                                    datetime(*datetime.today().timetuple()[:3])
 
                 if rec_unit == "d":
                     new_due = base_date + timedelta(days=rec_span)
