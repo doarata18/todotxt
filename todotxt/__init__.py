@@ -7,19 +7,19 @@ import re
 import codecs
 
 DATE_REGEX = "([\\d]{4})-([\\d]{2})-([\\d]{2})"
-CONTEXT_REGEX = "\s(@\\S+)"   # Unicode Contexts hit
-PROJECT_REGEX = "\s(\\+\\S+)" # Unicode Projects hit
+CONTEXT_REGEX = "\\s(@\\S+)"   # Unicode Contexts hit
+PROJECT_REGEX = "\\s(\\+\\S+)" # Unicode Projects hit
 NO_PRIORITY_CHARACTER = "^"
 DUEDATE_REGEX = "due\\:(\\S+)"
 THRESHOLDDATE_REGEX = "t\\:(\\S+)"
 RECURSIVE_REGEX = "rec\\:(\\S+)"
-REC_SYNTAX_REGEX = "(\+*)([0-9]+)([dwmyb])"
+REC_SYNTAX_REGEX = "(\\+*)([0-9]+)([dwmyb])"
 
 DUEDATE_SIG = "due:"
 THRESHOLDDATE_SIG = "t:"
 RECURSIVE_SIG = "rec:"
 
-HOLIDAY_TBL = []    # "YYYY-MM-DD" format
+HOLIDAY_TBL = []    # type: List[str]  ##list of "YYYY-MM-DD" formated string
 
 def date_value(arg_date):
     """
@@ -34,11 +34,11 @@ def date_value(arg_date):
 
       Returns: datetime.datetime
     """
-    WEEKDAYS = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
-                "monday":0, "tuesday":1, "wednesday":2, "thursday":3,
-                "friday":4, "saturday":5, "sunday":6}
+    _weekdays = {"mon":0, "tue":1, "wed":2, "thu":3, "fri":4, "sat":5, "sun":6,
+                 "monday":0, "tuesday":1, "wednesday":2, "thursday":3,
+                 "friday":4, "saturday":5, "sunday":6}
 
-    KEYWORDS = {"today":0, "tomorrow":1, "yesterday":-1}
+    _keywords = {"today":0, "tomorrow":1, "yesterday":-1}
 
     retval = None
     if isinstance(arg_date, date): # datetime型, date型
@@ -50,20 +50,20 @@ def date_value(arg_date):
     if match is not None:
         retval = datetime.strptime(match.group(0), "%Y-%m-%d")
 
-    elif arg_date in WEEKDAYS:
+    elif arg_date in _weekdays:
         today = datetime(*datetime.today().timetuple()[:3])
         wdtdy = today.weekday()
-        wdtgt = WEEKDAYS[arg_date]
+        wdtgt = _weekdays[arg_date]
         retval = today + timedelta(days=(wdtgt - wdtdy
                                          + (7 if wdtgt < wdtdy else 0)))
 
-    elif arg_date in KEYWORDS:
+    elif arg_date in _keywords:
         retval = datetime(*datetime.today().timetuple()[:3]) \
-                 + timedelta(days=KEYWORDS[arg_date])
+                 + timedelta(days=_keywords[arg_date])
 
     return retval
 
-def bizdate_add(start=None, addcnt = 1):
+def bizdate_add(start=None, addcnt=1):
     """add date in business date.
         Args:
             start(=datetime, default:today()): base date.
@@ -75,7 +75,7 @@ def bizdate_add(start=None, addcnt = 1):
         HOLIDAY_TBL<list> - \"YYYY-MM-DD\" formated str list, deal holiday.
             default []
     """
-    if start == None:
+    if start is None:
         start = datetime(*datetime.today().timetuple()[:3])
 
     retv = start
@@ -87,25 +87,22 @@ def bizdate_add(start=None, addcnt = 1):
 
 
 class Task(object):
-
     """A class that represents a task."""
-    tid = None
-    raw_todo = ""
-    priority = NO_PRIORITY_CHARACTER
-    todo = ""
-    projects = []
-    contexts = []
-    finished = False
-    created_date = None
-    finished_date = None
-    threshold_date = None
-    due_date = None
-    recursive = None
 
-    def __init__(self, raw_todo="[dummy task]", id=-1):
+    def __init__(self, raw_todo="[dummy task]", tid=-1):
 
-        self.tid = id
+        self.tid = tid
         self.raw_todo = raw_todo
+        self.priority = NO_PRIORITY_CHARACTER
+        self.todo = ""
+        self.projects = []
+        self.contexts = []
+        self.finished = False
+        self.created_date = None
+        self.finished_date = None
+        self.threshold_date = None
+        self.due_date = None
+        self.recursive = None
 
         self.parse()
 
@@ -116,7 +113,7 @@ class Task(object):
         return "<Task {0} '{1}'>".format(self.tid, self.raw_todo)
 
     def __eq__(self, other):
-        return (self.raw_todo == other.raw_todo)
+        return self.raw_todo == other.raw_todo
         ## return (self.tid == other.tid \
         ##         and self.raw_todo == other.raw_todo \
         ##         and self.priority == other.priority \
@@ -281,13 +278,13 @@ class Tasks(object):
     """Task manager that handles loading, saving and filtering tasks."""
 
     # the location of the todo.txt file
-    path = None
-    archive_path = None
-    tasks = []
-    archives = []
+    path = None             # type: str
+    archive_path = None     # type: str
+    tasks = []              # type: List[Task]
+    archives = []           # type: List[Task]
 
     # the dict that holds event handlers
-    handlers = {}
+    handlers = {}           # type: Dict[str, function]
 
     def __init__(self, path=None, archive_path=None, tasks=None):
         self.path = path
@@ -404,7 +401,7 @@ class Tasks(object):
         """
 
         return Tasks(self.path, self.archive_path,
-            filter(lambda x: x.matches(text), self.tasks))
+                     filter(lambda x: x.matches(text), self.tasks))
 
     def order_by(self, criteria):
         """Sorts the tasks by given criteria and returns a new Tasks object
@@ -419,9 +416,9 @@ class Tasks(object):
             - threshold_date
         """
 
-        reversed = False
+        reversed_ = False
         if criteria[0] == "-":
-            reversed = True
+            reversed_ = True
 
         criterias = ["tid", "priority", "finished", "created_date",
                      "finished_date", "due_date", "threshold_date"]
@@ -430,7 +427,7 @@ class Tasks(object):
             return Tasks(self.path,
                          self.archive_path,
                          sorted(self.tasks, key=attrgetter(criteria),
-                                reverse=reversed))
+                                reverse=reversed_))
         else:
             return self
 
@@ -496,7 +493,7 @@ class Tasks(object):
 
     def create_recursive_tasks(self):
         """Create recursicve tasks from finished tasks.
-            rec syntax: \"rec:\"\+*[0-9]+[dwmyb]
+            rec syntax: \"rec:\"+*[0-9]+[dwmyb]
             \"b\" : business date (skip sat, sun and holiday)
 
             HOLIDAY_TBL<list> - \"YYYY-MM-DD\" formated str list, deal holiday.
@@ -504,8 +501,8 @@ class Tasks(object):
 
             Returns: create tasks list.
         """
-        END_OF_MONTH = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
-                        7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
+        _end_of_month = {1:31, 2:28, 3:31, 4:30, 5:31, 6:30,
+                         7:31, 8:31, 9:30, 10:31, 11:30, 12:31}
         createlist = []
         for i in [x for x in self.tasks if x.finished and x.recursive != None]:
             new_task = Task(i.raw_todo)
@@ -536,8 +533,8 @@ class Tasks(object):
                              + ((base_date.month + rec_span) // 12)
                     rec_month = (base_date.month + rec_span) % 12
 
-                    if base_date.day > END_OF_MONTH[rec_month]:
-                        rec_day = END_OF_MONTH[rec_month]
+                    if base_date.day > _end_of_month[rec_month]:
+                        rec_day = _end_of_month[rec_month]
                         new_due = datetime(rec_year, rec_month, rec_day)
                         new_due += timedelta(days=(base_date.day - rec_day))
                     else:
@@ -600,4 +597,3 @@ class Tasks(object):
         self.tasks = []
         self.archives = []
         return self.load()
-
