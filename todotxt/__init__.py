@@ -42,7 +42,7 @@ def date_value(arg_date):
     _keywords = {"today": 0, "tomorrow": 1, "yesterday": -1}
 
     retval = None
-    if isinstance(arg_date, date):  # datetime型, date型
+    if isinstance(arg_date, date):  # datetime or date
         arg_date = arg_date.strftime("%Y-%m-%d")
     else:
         arg_date = arg_date.replace("/", "-")
@@ -85,7 +85,7 @@ def bizdate_add(start=None, addcnt=1):
         retv += timedelta(days=1)
         while retv.weekday() >= 5 \
             or (retv.strftime("%Y-%m-%d") in HOLIDAY_TBL):
-            # sat～sun, holiday
+            # sat~sun, holiday
             retv += timedelta(days=1)
     return retv
 
@@ -163,7 +163,7 @@ class Task(object):
         if len(match) != 0:
             self.threshold_date = \
                 date_value(match[0][len(THRESHOLDDATE_SIG):])
-            # splitsから"t:"節を取り除く処理
+            # strip "t:" node from splits
             for i in match:
                 splits.remove(i)
             rebuild_flg = True
@@ -173,7 +173,7 @@ class Task(object):
         if len(match) != 0:
             self.due_date = \
                 date_value(match[0][len(DUEDATE_SIG):])
-            # splitsから"due:"節を取り除く処理
+            # strip "due:" node from splits
             for i in match:
                 splits.remove(i)
             rebuild_flg = True
@@ -182,7 +182,7 @@ class Task(object):
         match = [x for x in splits if x.startswith(RECURSIVE_SIG)]
         if len(match) != 0:
             self.recursive = match[0].lstrip(RECURSIVE_SIG)
-            # splitsから"rec:"節を取り除く処理
+            # strip "rec:" node from splits
             for i in match:
                 splits.remove(i)
 
@@ -204,7 +204,9 @@ class Task(object):
 
         self.todo = " ".join(splits).strip()
 
-        if rebuild_flg:  # date_value()を呼び出しで日付自動展開した可能性がある
+        if rebuild_flg:
+            # There is a possibility that date expansion occurred
+            # during the date_value() call.
             self.rebuild_raw_todo()
 
     def matches(self, text):
@@ -481,7 +483,7 @@ class Tasks(object):
         return finished
 
     def create_recursive_tasks(self):
-        """Create recursicve tasks from finished tasks.
+        """Create recursive tasks from finished tasks.
             rec syntax: \"rec:\"+*[0-9]+[dwmyb]
             \"b\" : business date (skip sat, sun and holiday)
 
