@@ -336,8 +336,9 @@ class Tasks(object):
             with codecs.open(filename, "r", "utf-8") as f:
                 i = len(self.tasks)
                 for line in f:
-                    self.tasks.append(Task(line.strip(), i))
-                    i += 1
+                    if len(line.strip(" \t\n")) > 0:    # skip empty line
+                        self.tasks.append(Task(line.strip(), i))
+                        i += 1
 
             self._trigger_event("loaded")
             retval = True
